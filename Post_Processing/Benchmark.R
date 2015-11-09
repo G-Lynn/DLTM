@@ -5,11 +5,12 @@ library(ggplot2)
 #User defined inputs
 init = 5011
 stem = "~/SCIOME/Code/"
-DTM_variational = "model_run_harmonic"
 Model = "Harmonic"
+DTM_variational = paste("model_run_",tolower(Model), sep="")
+
 ########################################
 
-load(paste(stem,"SynData",Model,".RData",sep=""))
+load(paste(stem,"Data/SynData",Model,".RData",sep=""))
 load(paste(stem,"Reproducibility/Beta_", init, ".RData", sep="") )
 load(paste(stem,"Reproducibility/Eta_", init, ".RData", sep="") )
 load(paste(stem,"Reproducibility/Alpha_", init, ".RData", sep="") )
