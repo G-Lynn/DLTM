@@ -1,7 +1,7 @@
 rm(list=ls())
 library(googleVis)
-load("~/SCIOME/Code/Reproducibility/Beta_202.RData")
-load("~/SCIOME/Code/Reproducibility/Eta_202.RData")
+load("~/SCIOME/Code/Reproducibility/Beta_201.RData")
+load("~/SCIOME/Code/Reproducibility/Eta_201.RData")
 
 Corpus_name = "Pubmed_85_15"
 load(file=paste("~/SCIOME/Data/Vocab_Map_",Corpus_name,".RData",sep=""))
