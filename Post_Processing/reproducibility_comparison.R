@@ -1,4 +1,5 @@
 rm(list=ls())
+library(ggplot2)
 K = 3
 t.T = 5
 
@@ -9,11 +10,12 @@ nSim = 5
 #level but not for underlying parameters.  
 
 for(i in 1:nSim){
-  load(paste("~/SCIOME/Code/Reproducibility/Alpha_",i,".RData",sep=""))
+  ii = i + 0
+  load(paste("~/SCIOME/Code/Reproducibility/Alpha_",ii,".RData",sep=""))
   assign(paste("Alpha_mean_",i,sep=""),Alpha_mean)
-  load(paste("~/SCIOME/Code/Reproducibility/Eta_",i,".RData",sep=""))
+  load(paste("~/SCIOME/Code/Reproducibility/Eta_",ii,".RData",sep=""))
   assign(paste("Prob_Eta_",i,sep=""),Prob_Eta)
-  load(paste("~/SCIOME/Code/Reproducibility/Beta_",i,".RData",sep=""))
+  load(paste("~/SCIOME/Code/Reproducibility/Beta_",ii,".RData",sep=""))
   assign(paste("Prob_Beta_",i,sep=""),Prob_Beta)
 }
 
@@ -56,7 +58,7 @@ names(sa)[2] = "Topic"
 sa$x <- rep(seq_len(ncol(MAX_TV)), nrow(MAX_TV))
 ggplot(data = sa, aes(x=x))+
   geom_point(aes(y=values, group = Topic, color = Topic, shape = Topic), size = 5 )+
-  ylim(0,.075) + xlab("Time") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
+  ylim(0,.05) + xlab("Time") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
 dev.off()
 
 
@@ -81,5 +83,5 @@ for(t in 1:t.T){
 
 pdf("~/SCIOME/Writing/Figures/TV_Eta_Max.pdf")
 df = data.frame(TV = tv, Time = factor(time))
-ggplot(df, aes(x=Time, y=TV)) + geom_boxplot(fill="light blue") + ylab("Max TV Distance") + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20)) 
+ggplot(df, aes(x=Time, y=TV)) + geom_boxplot(fill="light blue") + ylab("Max TV Distance") + ylim(0,.05) + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20)) 
 dev.off()
