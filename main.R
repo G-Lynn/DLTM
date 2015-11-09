@@ -28,11 +28,11 @@ N.MC = B + thin*nSamples  #total number of MCMC iterations.
 #-------Load Data-------------------------------------------- ----------------------
 #Real Data.  Only load one of these files.
 if(Real_Data==TRUE){
-    load(file = "~/SCIOME/Data/DynCorp_Pubmed_85_15.RData" )
+    load(file = paste(stem,"Data/DynCorp_Pubmed_85_15.RData",sep="") )
     t.1 = 1
     t.T = length(1985:2014)  #the total number of time points in the corpus
 }else{
-    load(file = paste(stem,"SynData",Model,".RData",sep="") )  #DTM synthetic data
+    load(file = paste(stem,"Data/SynData",Model,".RData",sep="") )  #DTM synthetic data
 }
 #K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
 
