@@ -1,4 +1,5 @@
 #rm(list=ls())
+#load("~/SCIOME/Code/SynData1.RData")
 #load("~/SCIOME/Code/SynDataLinear.RData")
 ##load(file = "~/SCIOME/Data/DynCorp_Pubmed_85_15.RData" )
 #t.1 = 1
@@ -6,12 +7,18 @@
 #t.T = length(1985:2014)  #the total number of time points in the corpus
 #K=3
 #stem = "~/SCIOME/Code/"
-#init = 301
+#init = 5
 #nSamples = 3000
 #B = 0
 #burnIn = 2000
+#a2 = .025
+#p = 1
+#F_dkt = matrix(c(1), nrow = 1)
 #p = 2
+#F_dkt = matrix(c(1,0), nrow = 1)
+
 #library(parallel)
+
 ############
 
 Beta = list()
@@ -86,12 +93,12 @@ for(k in 1:K){
   for(i in 1:(nSamples-burnIn)){
     index_l = p*(i-1) + 1
     index_u = p*i
-    eta = F_dkt%*%as.matrix(tmp[index_l:index_u,2:(t.T+1)])  + rnorm(t.T,0,sqrt(a2) )
+    eta = F_dkt%*%as.matrix(tmp[index_l:index_u,2:(t.T+1)]) + rnorm(1,0,sqrt(a2))
     for(t in 1:t.T) Alpha_t[[t]][i,k] = eta[t]
   }
 }
 
-P.Z.mean = CI.025 = CI.975 = matrix(nrow = 3, ncol = t.T)
+P.Z.mean = CI.025 = CI.975 = matrix(nrow = K, ncol = t.T)
 
 for(t in 1:t.T){
   P.z = exp(Alpha_t[[t]])/apply(exp(Alpha_t[[t]]),1,sum)
