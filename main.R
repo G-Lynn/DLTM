@@ -243,5 +243,5 @@ for(m in 1:N.MC){
   }
 }#end MCMC
 message(proc.time()[3]-ptm[3])
-source(paste(stem,"post_proc_reproducible.R",sep="") )
+source(paste(stem,"post_summaries.R",sep="") )
 
