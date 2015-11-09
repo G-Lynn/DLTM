@@ -185,6 +185,8 @@ Zeta_k = Zeta_Step(MC.Cores = nCores, K, V, ny, ny_thresh, Beta_k)
 #save(file="~/SCIOME/Code/DLTM.RData", Alpha_k, Alpha_t, Beta_k, Beta_t, D, Eta_k, Eta_t, FF, G, Kappa_Beta_k, Kappa_Eta_t, N.D, Omega_t, V, W, Zeta_k)
 ########################################################################################
 #MCMC
+unlink(paste(stem,"Post_Summaries",sep="") )
+unlink(paste(stem,"Post_Summaries/Init_",init,sep=""))
 dir.create(paste(stem,"Post_Summaries",sep="") )
 dir.create(paste(stem,"Post_Summaries/Init_",init,sep=""))
 
