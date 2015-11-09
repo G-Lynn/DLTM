@@ -1,7 +1,11 @@
 rm(list=ls())
 library(googleVis)
-load("~/SCIOME/Code/Reproducibility/Beta_202.RData")
-load("~/SCIOME/Code/Reproducibility/Eta_202.RData")
+library(ggplot2)
+
+load("~/SCIOME/Code/Reproducibility/Beta_201.RData")
+load("~/SCIOME/Code/Reproducibility/Eta_201.RData")
+load("~/SCIOME/Code/Reproducibility/Alpha_201.RData")
+load("~/SCIOME/Code/Reproducibility/Prob_Z_201.RData")
 
 Corpus_name = "Pubmed_85_15"
 load(file=paste("~/SCIOME/Data/Vocab_Map_",Corpus_name,".RData",sep=""))
@@ -26,25 +30,38 @@ library(xtable)
 
 xtable(Topic_1)
 xtable(Topic_2)
+xtable(Topic_3)
+Brain = Hospital = Lung = Lesions = rep(NA,t.T)
 
-Brain = rep(NA,t.T)
-Data = rep(NA, t.T)
-Mice = rep(NA, t.T)
 
 for(t in 1:t.T){
   Brain[t] = Prob_Beta[[t]][3,"brain"]
-  Mice[t] = Prob_Beta[[t]][3,"mice"]
-  Data[t] = Prob_Beta[[t]][3,"data"]
+  Hospital[t] = Prob_Beta[[t]][3,"hospital"]
+  Lung[t] = Prob_Beta[[t]][3,"lung"]
+  Lesions[t] = Prob_Beta[[t]][3,"lesions"]
 }
 years = 1984+1:t.T
 pdf("~/SCIOME/Writing/Figures/Topic_3_Kwds_PubMed.pdf")
-Comparison = data.frame(Year = years, Brain = Brain, Mice = Mice, Data = Data)
+Comparison = data.frame(Year = years, Hospital = Hospital, Brain = Brain, Lung = Lung, Lesions = Lesions)
 g = ggplot(Comparison, aes(x=Year) ) + 
-  geom_line(aes(y=Brain, color = "Brain"), size =2) + 
-  geom_line(aes(y=Mice, color = "Mice"), size = 2) +
-  geom_line(aes(y=Data, color = "Data"), size = 2) +
-  scale_color_manual("", breaks = c("Brain", "Mice", "Data"), values =c("Brain" = "blue", "Mice" = "black", "Data" = "orange") ) + 
+  geom_line(aes(y=Hospital, color = "Hospital"), size =2) + 
+  geom_line(aes(y=Brain, color = "Brain"), size = 2) +
+  geom_line(aes(y=Lung, color = "Lung"), size = 2) +
+  geom_line(aes(y=Lesions, color = "Lesions"), size = 2) +
+  scale_color_manual("", breaks = c("Hospital", "Brain", "Lung", "Lesions"), values =c("Hospital" = "blue", "Brain" = "black", "Lung" = "orange", "Lesions" = "purple") ) + 
   xlab("Year") + 
+  ylab("Probability")
+g + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
+dev.off()
+
+
+pdf("~/SCIOME/Writing/Figures/Topic_Proportions_201.pdf" )
+Comparison = data.frame(Time = rep(1:t.T, times = K), Probability = c( t(P.Z.mean) ), CI.025 = c( t(CI.025) ), CI.975 = c( t(CI.975) ), Topic = factor(rep(1:K, each=t.T)) ) 
+g = ggplot(Comparison, aes(x=Time) ) + 
+  geom_line(aes(y=Probability, group = Topic, color = Topic), size = 4) + 
+  geom_line(aes(x = Time, y=CI.025, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
+  geom_line(aes(x = Time, y=CI.975, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
+  xlab("Time") + 
   ylab("Probability")
 g + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
 dev.off()
