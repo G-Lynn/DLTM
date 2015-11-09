@@ -17,14 +17,14 @@ arma::mat Eta_dkt(const std::string& fname, arma::vec index, int m, int B, int t
   for(int d = 0; d<D_t; d++){
     double expC = arma::sum( arma::exp( Eta_t.row(d) ) );
     for(int k = 0; k<K; k++){
-      int kk = index(k)-1;
+      int kk = index(k);
       double expCMk = expC - exp( Eta_t(d,kk) );
       
       double lambda_dk = 1.0/( OMEGA_t(d,kk) + 1.0/a2); 
       arma::mat F_alpha = FF_t.row(d)*Alpha_t.col(kk);
       
       double q_dk = lambda_dk*( Kappa_t(d,kk) + OMEGA_t(d,kk)*log(expCMk) + (1.0/a2)*F_alpha(0) );
-      Eta_t(d,kk) = R::rnorm(q_dk, sqrt(lambda_dk) );
+      Eta_t(d,kk) = R::rnorm( q_dk, sqrt(lambda_dk) );
       expC = expCMk + exp(Eta_t(d,kk));
     }
   }
