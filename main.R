@@ -1,4 +1,5 @@
 rm(list=ls())
+##Does this show up on GitHub?
 #install.packages(c("Rcpp","RcppArmadillo","parallel") )
 .libPaths(c(.libPaths(),"/home/grad/cdg28/R/x86_64-redhat-linux-gnu-library/3.1"))
 library(MASS)           #required for the multivariate normal sampler
