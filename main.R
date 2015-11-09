@@ -1,51 +1,41 @@
 rm(list=ls())
-#install.packages(c("Rcpp","RcppArmadillo","parallel") )
-.libPaths(c(.libPaths(),"/home/grad/cdg28/R/x86_64-redhat-linux-gnu-library/3.1"))
+install.packages(c("Rcpp","RcppArmadillo","parallel") )
 library(MASS)           #required for the multivariate normal sampler
 library(parallel)       #required for mclapply and parallel computation 
 library(Rcpp)           #required for compiling C++ code into R functions
 library(RcppArmadillo)  #required for Matrix operations in C++
-library(BayesLogit)
-#include the R functions in the following files.  each file corresponds to a function
-
-#-------Load MCMC Wrappers for parallelization and C++ functions ----------------------
-# Alpha step
 
 #User defined inputs
 stem = "/home/grad/cdg28/SCIOME/Code/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
-nCores = 8               # Number of cores to use for parallel computation
+nCores = 8                # Number of cores to use for parallel computation
 K = 15                    #the number of topics in the corpus
-init = 20115
-p = 1  #dimension of the state space
-Model = "Linear"
+init = 1                  #the MCMC initialization for comparing multiple runs.
+p = 1  #dimension of the state space.  1 for DTM.  2 for Locally linear.  2 for Harmonic.  3 for quadratic.
+Model = "Linear"          #if Harmonic, G matrix will be different. 
 
 B = 0 #the number of samples to discard before writing to output
 burnIn = 2000 #4000 #the number of samples to discard before computing summaries
 nSamples = 3000 #6000#
 thin = 100 #100 #preferred
-N.MC = B + thin*nSamples
+N.MC = B + thin*nSamples  #total number of MCMC iterations.
+
+
+#-------Load MCMC Wrappers for parallelization and C++ functions ----------------------
+# Alpha step
+
 
 #-------Load Data-------------------------------------------- ----------------------
-#Real Data
+#Real Data.  Only load one of these files.
 load(file = "~/SCIOME/Data/DynCorp_Pubmed_85_15.RData" )
 t.1 = 1
 t.T = length(1985:2014)  #the total number of time points in the corpus
-#V                        #the number of terms in the vocabulary.  loaded in with DynCorpus
-#K
-#rm(Vocab_index)
 
-#Synthetic Data includes t.T, V
+#load(file = paste(stem,"SynDataRW.RData",sep="") )  #DTM synthetic data
+#load(file = paste(stem,"SynDataLinear.RData",sep="") ) #DLTM with linear trend synthetic data
+#load(file = paste(stem,"SynDataQuadratic.RData",sep="") ) #DLTM with quadratic trend synthetic data
+#load(file = paste(stem,"SynDataHarmonic.RData",sep="") ) #DLTM with harmonic trend synthetic data
 
-#load(file = paste(stem,"SynDataRW.RData",sep="") )
-#load(file = paste(stem,"SynDataLinear.RData",sep="") )
-#load(file = paste(stem,"SynDataQuadratic.RData",sep="") )
-#load(file = paste(stem,"SynDataHarmonic.RData",sep="") )
-#K = 6
-#load(file = paste(stem,"SynData1_small.RData",sep="") )
-#load(file = paste(stem,"SynDataLinear_small.RData",sep="") )
-#load(file = paste(stem,"SynDataQuadratic_small.RData",sep="") )
-#load(file = paste(stem,"SynDataHarmonic_small.RData",sep="") )
-
+#K = 6  #to mis-specify K for synthetic data, enter it here.  
 
 #Now load required functions
 
@@ -82,8 +72,9 @@ source(paste(stem,"Write_Prob_Time.R",sep="") )        # Wrapper for paralleliza
 
 
 ########################################################################################
-print(paste("K = ", K) )
-print(paste("V = ", V) )
+message(paste("Init = ", init) )
+message(paste("K = ", K) )
+message(paste("V = ", V) )
 
 #Specify hyper-parameters
 
