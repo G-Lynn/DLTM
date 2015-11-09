@@ -1,15 +1,20 @@
 rm(list=ls())
-
-init = 5011
-folder = "model_run_harmonic"
-load("~/SCIOME/Code/SynDataHarmonic.RData")
-
-
-load(paste("~/SCIOME/Code/Reproducibility/Beta_", init, ".RData", sep="") )
-load(paste("~/SCIOME/Code/Reproducibility/Eta_", init, ".RData", sep="") )
-load(paste("~/SCIOME/Code/Reproducibility/Alpha_", init, ".RData", sep="") )
-load(paste("~/SCIOME/Code/Reproducibility/Prob_Z_",init,".RData",sep="") )
+install.packages(c("ggplot2"))
 library(ggplot2)
+
+#User defined inputs
+init = 5011
+stem = "~/SCIOME/Code/"
+DTM_variational = "model_run_harmonic"
+Model = "Harmonic"
+########################################
+
+load(paste(stem,"SynData",Model,".RData",sep=""))
+load(paste(stem,"Reproducibility/Beta_", init, ".RData", sep="") )
+load(paste(stem,"Reproducibility/Eta_", init, ".RData", sep="") )
+load(paste(stem,"Reproducibility/Alpha_", init, ".RData", sep="") )
+load(paste(stem,"Reproducibility/Prob_Z_",init,".RData",sep="") )
+
 #Read in and align my estimates to the truth
 Prob_Eta_truth = list()
 for(t in 1:t.T){
@@ -46,7 +51,7 @@ CI.025 = CI.025[topic_matching,]
 CI.975 = CI.975[topic_matching,]
 
 # now read in Blei's estimates and align them to the truth
-a = scan(paste("~/Desktop/dtm_release/dtm/example/",folder,"/lda-seq/gam.dat", sep="") )
+a = scan(paste(stem,"Variational/",DTM_variational,"/lda-seq/gam.dat", sep="") )
 b = matrix(a, ncol = K, byrow = T)
 rs = apply(b,1,sum)
 PB = b/rs
@@ -66,7 +71,7 @@ Prob_Beta_Blei = list()
 for(t in 1:t.T) Prob_Beta_Blei[[t]] = matrix(0,nrow = K, ncol = V)
 
 for(k in 1:K){
-  a = scan(paste("~/Desktop/dtm_release/dtm/example/", folder,"/lda-seq/topic-00",(k-1),"-var-e-log-prob.dat", sep="") )
+  a = scan(paste(stem,"Variational/", DTM_variational,"/lda-seq/topic-00",(k-1),"-var-e-log-prob.dat", sep="") )
   b = matrix(a,ncol=t.T,byrow=T) 
   for(t in 1:t.T) Prob_Beta_Blei[[t]][k,] = exp(b[,t])
 }
@@ -105,7 +110,7 @@ ID = c("MCMC", "Variational")
 df = data.frame(Method = rep(ID,each=D[t]), TV = c(p1,p2) )
 
 
-pdf(paste( "~/SCIOME/Writing/Figures/Eta_TV_Benchmark_piecewise_", init, ".pdf", sep="") )
+pdf(paste( stem,"Figures/Eta_TV_Benchmark_piecewise_", init, ".pdf", sep="") )
 g = ggplot(df) + geom_histogram(aes(x=TV, fill=Method), color="grey50", alpha=.5, position = "identity")
 g + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
 dev.off()
@@ -126,7 +131,7 @@ for(t in 1:t.T){
 
 
 
-pdf(paste( "~/SCIOME/Writing/Figures/Beta_TV_Benchmark_piecewise_", init, ".pdf", sep="") )
+pdf(paste( stem,"Figures/Beta_TV_Benchmark_piecewise_", init, ".pdf", sep="") )
 sa = data.frame(Time = rep(1:t.T, times = 2*K), TV = c(TV_Beta[1,], TV_Beta_Blei[1,], TV_Beta[2,], TV_Beta_Blei[2,], TV_Beta[3,], TV_Beta_Blei[3,]), Method = rep( rep(c("MCMC","Variational"),each=t.T ), times = K), Topic = factor( rep( 1:K, each = 2*t.T ) ), Group = rep(1:(2*K), each=t.T) )
 ggplot(data = sa, aes(x=Time))+
   geom_point(aes(y=TV, group = Group, color = Method, shape = Topic), size = 5 )+
@@ -140,7 +145,7 @@ v = 1:V
 
 
 for(k in 1:K){
-  pdf(paste( "~/SCIOME/Writing/Figures/Truth_Post_Mean_piecewise_", init, "_",k,".pdf", sep="") )
+  pdf(paste( stem,"Figures/Truth_Post_Mean_piecewise_", init, "_",k,".pdf", sep="") )
   Comparison = data.frame(v, MCMC = Prob_Beta[[t]][k,], Truth = Prob_Beta_truth[[t]][k,], Variational = Prob_Beta_Blei[[t]][k,], CI.025 = Prob_Beta_CI[[t]][[k]][1,], CI.975 = Prob_Beta_CI[[t]][[k]][2,]) 
   g = ggplot(Comparison, aes(x=v) ) + 
   geom_point(aes(y=MCMC, color = "MCMC")) + 
@@ -166,16 +171,7 @@ for(k in 1:K){
   }
 }
 
-pdf(paste("~/SCIOME/Writing/Figures/Topic_Proportions_", init, ".pdf", sep="") )
-#Comparison = data.frame(Time = rep(1:t.T, times = K), Probability = c( t(P.Z.mean) ), CI.025 = c( t(CI.025) ), CI.975 = c( t(CI.975) ), Topic = factor(rep(1:K, each=t.T)) ) 
-#g = ggplot(Comparison, aes(x=Time) ) + 
-#  geom_line(aes(y=Probability, group = Topic, color = Topic), size = 4) + 
-  #geom_segment(mapping = aes(x = Time, y=CI.025, xend = Time, yend = CI.975, color = Topic),size = 3, alpha = .40 ) +
-#  geom_line(aes(x = Time, y=CI.025, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
-#  geom_line(aes(x = Time, y=CI.975, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
-#  xlab("Time") + 
-#  ylab("Probability")
-#g + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
+pdf(paste(stem,"Figures/Topic_Proportions_", init, ".pdf", sep="") )
 
 Comparison = data.frame(Time = rep(1:t.T, times = K), Truth = Z_prob_truth[,1], Probability = c(  t(P.Z.mean) ), CI.025 = c( t(CI.025) ), CI.975 = c( t(CI.975) ), Topic = factor(rep(1:K, each=t.T)) ) 
 g = ggplot(Comparison, aes(x=Time) ) + 
