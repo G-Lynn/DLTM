@@ -35,7 +35,8 @@ t.T = length(1985:2014)  #the total number of time points in the corpus
 #load(file = paste(stem,"SynDataQuadratic.RData",sep="") ) #DLTM with quadratic trend synthetic data
 #load(file = paste(stem,"SynDataHarmonic.RData",sep="") ) #DLTM with harmonic trend synthetic data
 
-#K = 6  #to mis-specify K for synthetic data, enter it here.  
+#K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
+
 
 #Now load required functions
 
