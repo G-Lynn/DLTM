@@ -5,8 +5,8 @@ library(ggplot2)
 #User defined inputs
 init = 101
 stem = "~/SCIOME/Code/"
-DTM_variational = "model_run_harmonic"
-Model = "Harmonic"
+DTM_variational = "model_run_rw_K6"
+Model = "RW"
 ########################################
 
 load(paste(stem,"SynData",Model,".RData",sep=""))
@@ -69,7 +69,7 @@ CI.025 = CI.025[topic_matching,]
 CI.975 = CI.975[topic_matching,]
 
 # now read in Blei's estimates and align them to the truth
-a = scan(paste(stem,"Variational",DTM_variational,"/lda-seq/gam.dat", sep="") )
+a = scan(paste(stem,"Variational/",DTM_variational,"/lda-seq/gam.dat", sep="") )
 b = matrix(a, ncol = K, byrow = T)
 rs = apply(b,1,sum)
 PB = b/rs
@@ -89,7 +89,7 @@ Prob_Beta_Blei = list()
 for(t in 1:t.T) Prob_Beta_Blei[[t]] = matrix(0,nrow = K, ncol = V)
 
 for(k in 1:K){
-  a = scan(paste(stem, "Variational", DTM_variational,"/lda-seq/topic-00",(k-1),"-var-e-log-prob.dat", sep="") )
+  a = scan(paste(stem, "Variational/", DTM_variational,"/lda-seq/topic-00",(k-1),"-var-e-log-prob.dat", sep="") )
   b = matrix(a,ncol=t.T,byrow=T) 
   for(t in 1:t.T) Prob_Beta_Blei[[t]][k,] = exp(b[,t])
 }
