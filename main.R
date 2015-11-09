@@ -10,8 +10,13 @@ stem = "/home/grad/cdg28/SCIOME/Code/"  # path to the DLTM directory.  Needs to 
 nCores = 8                # Number of cores to use for parallel computation
 K = 15                    #the number of topics in the corpus
 init = 1                  #the MCMC initialization for comparing multiple runs.
-p = 1  #dimension of the state space.  1 for DTM.  2 for Locally linear.  2 for Harmonic.  3 for quadratic.
-Model = "Linear"          #if Harmonic, G matrix will be different. 
+Real_Data = TRUE;         #Boolean to use real data or synthetic data
+
+#Choose the model for the data
+Model = "RW"; p = 1       #Model and dimension of state space
+#Model = "Linear"; p = 2 
+#Model = "Quadratic"; p = 3
+#Model = "Harmonic"; p = 2; 
 
 B = 0 #the number of samples to discard before writing to output
 burnIn = 2000 #4000 #the number of samples to discard before computing summaries
@@ -20,23 +25,19 @@ thin = 100 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
 
-#-------Load MCMC Wrappers for parallelization and C++ functions ----------------------
-# Alpha step
-
-
 #-------Load Data-------------------------------------------- ----------------------
 #Real Data.  Only load one of these files.
-load(file = "~/SCIOME/Data/DynCorp_Pubmed_85_15.RData" )
-t.1 = 1
-t.T = length(1985:2014)  #the total number of time points in the corpus
-
-#load(file = paste(stem,"SynDataRW.RData",sep="") )  #DTM synthetic data
-#load(file = paste(stem,"SynDataLinear.RData",sep="") ) #DLTM with linear trend synthetic data
-#load(file = paste(stem,"SynDataQuadratic.RData",sep="") ) #DLTM with quadratic trend synthetic data
-#load(file = paste(stem,"SynDataHarmonic.RData",sep="") ) #DLTM with harmonic trend synthetic data
-
+if(Real_Data==TRUE){
+    load(file = "~/SCIOME/Data/DynCorp_Pubmed_85_15.RData" )
+    t.1 = 1
+    t.T = length(1985:2014)  #the total number of time points in the corpus
+}else{
+    load(file = paste(stem,"SynData",Model,".RData",sep="") )  #DTM synthetic data
+}
 #K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
 
+
+#-------Load MCMC Wrappers for parallelization and C++ functions ----------------------
 
 #Now load required functions
 
