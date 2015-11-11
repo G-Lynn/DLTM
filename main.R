@@ -186,12 +186,12 @@ Zeta_k = Zeta_Step(MC.Cores = nCores, K, V, ny, ny_thresh, Beta_k)
 ########################################################################################
 #MCMC
 
-unlink(paste(stem,"Post_Summaries/Init_",init,sep=""), recursive=T)
-dir.create(paste(stem,"Post_Summaries/Init_",init,sep=""))
+unlink(paste(stem,"MCMC_Samples/Init_",init,sep=""), recursive=T)
+dir.create(paste(stem,"MCMC_Samples/Init_",init,sep=""))
 
-fnames_Beta = paste(stem,"Post_Summaries/Init_",init,"/Beta_",1:K,".csv",sep="")
-fnames_Alpha = paste(stem,"Post_Summaries/Init_",init,"/Alpha_",1:K,".csv",sep="")
-fnames_Eta = paste(stem,"Post_Summaries/Init_",init,"/Eta_",1:t.T,".csv",sep="")
+fnames_Beta = paste(stem,"MCMC_Samples/Init_",init,"/Beta_",1:K,".csv",sep="")
+fnames_Alpha = paste(stem,"MCMC_Samples/Init_",init,"/Alpha_",1:K,".csv",sep="")
+fnames_Eta = paste(stem,"MCMC_Samples/Init_",init,"/Eta_",1:t.T,".csv",sep="")
 
 ptm = proc.time()
 for(m in 1:N.MC){
