@@ -1,7 +1,7 @@
 rm(list=ls())
 library(googleVis)
 init = 20115
-MCMC_directory = "~/SCIOME/Code/Reproducibility/"
+MCMC_directory = "~/SCIOME/Code/Reproducibility/"   #directory for mcmc SUMMARIES
 data_directory = "~/DLTM/Data/"
 html_path = "~/.public_html/Topic_Visualization/"
 Corpus_name = "Pubmed_85_15"
