@@ -57,7 +57,7 @@ for(k in 1:K){
   sa <- stack(as.data.frame( t(TV_Beta[[k]]) ))
   names(sa)[2] = "Chain"
   sa$x <- rep(seq_len(ncol(TV_Beta[[k]])), nrow(TV_Beta[[k]]))
-  g = qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
+  g = qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,1) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
   print(g)
   dev.off()
 }
@@ -78,5 +78,5 @@ pdf(paste(output_directory,"TV_Beta_wIn.pdf",sep="") )
 sa <- stack(as.data.frame( t(TV_Beta_wIn) ))
 names(sa)[2] = "Topic"
 sa$x <- rep(seq_len(ncol(TV_Beta_wIn)), nrow(TV_Beta_wIn))
-qplot(x, values, data = sa, group = Topic, colour = Topic, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
+qplot(x, values, data = sa, group = Topic, colour = Topic, geom = "line") + ylim(0,1) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
 dev.off()
