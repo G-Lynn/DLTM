@@ -1,9 +1,9 @@
 # DLTM
 This repository contains all R and C++ software developed for inference and post-processing in the Dynamic Linear Topic Model.
 
-There are only a few files which need to be run in order to run the MCMC simulations and post-processing.  
+There are a few files which need to be run in order to run the MCMC simulations and post-processing.  
 
-The MCMC algorithm can be run in main.R.  The user must update the directory of the DLTM-master folder called. This directory variable, called stem, must be a full path.  It may not contain any abbreviations
+The MCMC algorithm can be run in main.R.  The user must update the directory of the DLTM-master folder. This directory variable, called stem, must be a full path.  It may not contain any abbreviations
 such as ~/, .., or other linux based directory abbreviations.  The reason is that output files are written in C++ and C++ does not recognize these abbreviations.  A few other user defined inputs must be changed at the very top of main.R.  The user should not have to change anything after the point that says "End of user defined inputs"
 
 All post-processing code is in the folder Post_Processing.  A few directories and user defined inputs may require updating at the top of each file.
