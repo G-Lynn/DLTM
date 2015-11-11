@@ -1,12 +1,19 @@
 rm(list=ls())
 library(ggplot2)
-init = 20115
-MCMC_directory = "~/SCIOME/Code/Reproducibility/"  #directory for mcmc SUMMARIES
-output_directory = "~/DLTM/Figures/"
-data_directory = "~/DLTM/Data/"
-Corpus_name = "Pubmed_85_15"
-t.T = 30
-K = 15
+
+# User defined inputs
+init = 1
+
+# all directories must end with /
+MCMC_directory = "~/DLTM-master/MCMC_Summaries/"  #directory for mcmc SUMMARIES
+output_directory = "~/DLTM-master/Figures/"       #directory for figures
+data_directory = "~/DLTM-master/Data/"            #directory for data
+
+Corpus_name = "Pubmed_85_15"                      #corpus name.  probably doesn't need to be changed.  
+t.T = 30  #total number of time points
+K = 15    #number of topics
+
+# End of user defined inputs
 
 load(paste(MCMC_directory,"Beta_",init,".RData", sep=""))
 load(paste(MCMC_directory,"Eta_",init,".RData", sep=""))

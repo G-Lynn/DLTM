@@ -1,21 +1,25 @@
 rm(list=ls())
 library(ggplot2)
-K = 3
-t.T = 5
 
-nSim = 5
-#alpha may not be reproducible here because what is differenced will be different depending
-#on what is labeled as topic K.  We set topic K to zero by differencing, but topic K does not always
-#correspond to the same thing across different MCMC runs.  This problem is solved at the simplex
-#level but not for underlying parameters.  
+# User defined inputs
+
+K = 3 #number of topics  
+t.T = 5 #total number of time points
+nSim = 5 #total number of simulations being compared
+
+MCMC_directory = "~/DLTM-master/MCMC_Summaries/"
+output_directory = "~/DLTM-master/Figures/"
+
+
+
 
 for(i in 1:nSim){
   ii = i + 0
-  load(paste("~/SCIOME/Code/Reproducibility/Alpha_",ii,".RData",sep=""))
+  load(paste(MCMC_directory,"Alpha_",ii,".RData",sep=""))
   assign(paste("Alpha_mean_",i,sep=""),Alpha_mean)
-  load(paste("~/SCIOME/Code/Reproducibility/Eta_",ii,".RData",sep=""))
+  load(paste(MCMC_directory,"Eta_",ii,".RData",sep=""))
   assign(paste("Prob_Eta_",i,sep=""),Prob_Eta)
-  load(paste("~/SCIOME/Code/Reproducibility/Beta_",ii,".RData",sep=""))
+  load(paste(MCMC_directory,"Beta_",ii,".RData",sep=""))
   assign(paste("Prob_Beta_",i,sep=""),Prob_Beta)
 }
 
@@ -52,7 +56,7 @@ for(k in 1:K){
 }
 rownames(MAX_TV) = factor(1:K)
 
-pdf("~/SCIOME/Writing/Figures/TV_Beta_Max.pdf")
+pdf(paste(output_directory,"TV_Beta_Max.pdf",sep="" ) )
 sa <- stack(as.data.frame( t(MAX_TV) ))
 names(sa)[2] = "Topic"
 sa$x <- rep(seq_len(ncol(MAX_TV)), nrow(MAX_TV))
@@ -81,7 +85,7 @@ for(t in 1:t.T){
 }
 
 
-pdf("~/SCIOME/Writing/Figures/TV_Eta_Max.pdf")
+pdf(paste(output_directory,"TV_Eta_Max.pdf",sep=""))
 df = data.frame(TV = tv, Time = factor(time))
 ggplot(df, aes(x=Time, y=TV)) + geom_boxplot(fill="light blue") + ylab("Max TV Distance") + ylim(0,.05) + theme(axis.text=element_text(size=20, color="black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20)) 
 dev.off()

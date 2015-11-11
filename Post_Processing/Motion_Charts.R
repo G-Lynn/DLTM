@@ -1,17 +1,26 @@
 rm(list=ls())
 library(googleVis)
-init = 20115
-MCMC_directory = "~/SCIOME/Code/Reproducibility/"   #directory for mcmc SUMMARIES
-data_directory = "~/DLTM/Data/"
-html_path = "~/.public_html/Topic_Visualization/"
-Corpus_name = "Pubmed_85_15"
+
+# User defined inputs
+
+init = 1
+
+# all directories must end with /
+MCMC_directory = "~/DLTM-master/MCMC_Summaries/"   #directory for mcmc SUMMARIES
+data_directory = "~/DLTM-master/Data/"             #directory for data 
+html_path = "~/.public_html/Topic_Visualization/"  #directory to write HTML files
+Corpus_name = "Pubmed_85_15"                       #name of corpus.  probably doesn't need to be changed. 
+
+t.T = 30 #total number of time poitns
+K = 15 #number of topics
+
+# End of user defined inputs ##########################################
 
 load(file=paste(MCMC_directory,"Beta_",init,".RData", sep=""))
 load(file=paste(MCMC_directory,"Eta_",init,".RData", sep=""))
 load(file=paste(data_directory,"Vocab_Map_",Corpus_name,".RData",sep=""))
 
-t.T = 30
-K = 15
+
 V = dim(Prob_Beta[[1]])[2]
 
 

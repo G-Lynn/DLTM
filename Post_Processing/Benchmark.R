@@ -3,14 +3,16 @@ install.packages(c("ggplot2"))
 library(ggplot2)
 
 #User defined inputs
-init = 5011
-MCMC_directory = "~/SCIOME/Code/MCMC_Summaries/"  #directory for mcmc SUMMARIES, not raw samples
-data_directory = "~/DLTM/Data/"                  #directory where data is stored
-variational_directory = "~/DLTM/Variational/"
-output_directory = "~/DLTM/Figures/"
+init = 1
+
+# all directories must end with a /
+MCMC_directory = "~/DLTM-master/MCMC_Summaries/"  #directory for mcmc SUMMARIES, not raw samples
+data_directory = "~/DLTM-master/Data/"                  #directory where data is stored
+variational_directory = "~/DLTM-master/Variational/"
+output_directory = "~/DLTM-master/Figures/"
 Model = "Harmonic"                                 #model for the data generating process
 
-
+# End of user defined inputs
 
 ########################################
 

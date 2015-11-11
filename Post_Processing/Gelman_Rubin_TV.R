@@ -1,14 +1,18 @@
 rm(list=ls())
-#stem_post = "~/SCIOME/pt01_Archive/Post_Summaries/"
 library(ggplot2)
-MCMC_directory = "~/SCIOME/Code/MCMC_Samples/"   #directory for mcmc SAMPLES
-output_directory = "~/DLTM/Figures/"
+
+# User defined inputs
+# all directories must end with /
+MCMC_directory = "~/DLTM-master/MCMC_Samples/"   #directory for mcmc SAMPLES
+output_directory = "~/DLTM-master/Figures/"      #directory for figures
 nSim = 5  #number of different simulations run
 K = 3     #number of topics
 t.T = 5   #total number of time points
 V = 1000  #size of the vocabulary
 burnIn = 2000  #number of samples to discard as burn-in.  
 nSamples = 6000  #total number of MCMC samples
+
+# End of user defined inputs #######################################################
 
 nSamples_wIn =nSamples - burnIn
 
