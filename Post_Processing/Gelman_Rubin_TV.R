@@ -7,8 +7,10 @@ nSim = 5  #number of different simulations run
 K = 3     #number of topics
 t.T = 5   #total number of time points
 V = 1000  #size of the vocabulary
+burnIn = 2000  #number of samples to discard as burn-in.  
 nSamples = 6000  #total number of MCMC samples
 
+nSamples_wIn =nSamples - burnIn
 
 Beta = list()
 Prob_Beta = list()
@@ -62,11 +64,11 @@ for(k in 1:K){
 
 #Now compute the within Chain Total Variation distance for 1000 randomly selected ordered pairs or samples
 
-c1 = sample(5001:6000,1000,replace=T)
-c2 = sample(5001:6000,1000,replace=T)
+c1 = sample(burnIn:nSamples,nSamples_wIn,replace=T)
+c2 = sample(burnIn:nSamples,nSamples_wIn,replace=T)
 init = 1
 t = 1
-TV_Beta_wIn = matrix(nrow = K, ncol = 1000)
+TV_Beta_wIn = matrix(nrow = K, ncol = nSamples_wIn)
 rownames(TV_Beta_wIn) = factor(1:3)
 for(k in 1:K){
   TV_Beta_wIn[k,] = .5*apply(abs( Prob_Beta[[init]][[k]][[t]][c1,] - Prob_Beta[[init]][[k]][[t]][c2,]), 1, sum)
