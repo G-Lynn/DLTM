@@ -1,12 +1,15 @@
 rm(list=ls())
 #stem_post = "~/SCIOME/pt01_Archive/Post_Summaries/"
 library(ggplot2)
-stem_post = "~/SCIOME/Code/Post_Summaries/"
-nSim = 5
-K = 3
-t.T = 5
-V = 1000
-nSamples = 6000
+MCMC_directory = "~/SCIOME/Code/MCMC_Samples/"   #directory for mcmc SAMPLES
+output_directory = "~/DLTM/Figures/"
+nSim = 5  #number of different simulations run
+K = 3     #number of topics
+t.T = 5   #total number of time points
+V = 1000  #size of the vocabulary
+nSamples = 6000  #total number of MCMC samples
+
+
 Beta = list()
 Prob_Beta = list()
 
@@ -17,7 +20,7 @@ TV_Beta_truth = matrix(nrow = K, ncol = K)
   for(k in 1:K){
     Beta[[k]]=list()
     Prob_Beta[[init]][[k]]=list()
-    tmp = read.csv(paste(stem_post,"Init_",ii,"/Beta_",k,".csv",sep=""),header=F,stringsAsFactors=F)
+    tmp = read.csv(paste(MCMC_directory,"Init_",ii,"/Beta_",k,".csv",sep=""),header=F,stringsAsFactors=F)
     for(t in 1:t.T){
       Beta[[k]][[t]] = matrix(0,nrow = nSamples,ncol = V)
       for(i in 1:nSamples){
@@ -46,30 +49,16 @@ for(k in 1:K){
   for(j in 2:nSim ) TV_Beta[[k]][j-1,] = .5*apply(abs( Prob_Beta[[1]][[k]][[1]] - Prob_Beta[[j]][[k]][[1]]), 1, sum)
 }
 
-pdf("~/SCIOME/Writing/Figures/Across_Chain_TV_1.pdf")
-k=1
-sa <- stack(as.data.frame( t(TV_Beta[[k]]) ))
-names(sa)[2] = "Chain"
-sa$x <- rep(seq_len(ncol(TV_Beta[[k]])), nrow(TV_Beta[[1]]))
-qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
-dev.off()
 
-pdf("~/SCIOME/Writing/Figures/Across_Chain_TV_2.pdf")
-k=2
-sa <- stack(as.data.frame( t(TV_Beta[[k]]) ))
-names(sa)[2] = "Chain"
-sa$x <- rep(seq_len(ncol(TV_Beta[[k]])), nrow(TV_Beta[[1]]))
-qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
-dev.off()
-
-pdf("~/SCIOME/Writing/Figures/Across_Chain_TV_3.pdf")
-k=3
-sa <- stack(as.data.frame( t(TV_Beta[[k]]) ))
-names(sa)[2] = "Chain"
-sa$x <- rep(seq_len(ncol(TV_Beta[[k]])), nrow(TV_Beta[[1]]))
-qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
-dev.off()
-
+for(k in 1:K){
+  pdf(paste(output_directory,"Across_Chain_TV_",k,".pdf",sep=""))
+  sa <- stack(as.data.frame( t(TV_Beta[[k]]) ))
+  names(sa)[2] = "Chain"
+  sa$x <- rep(seq_len(ncol(TV_Beta[[k]])), nrow(TV_Beta[[k]]))
+  g = qplot(x, values, data = sa, group = Chain, colour = Chain, geom = "line") + ylim(0,.55) + xlab("MCMC Sample") + ylab("TV Distance") + theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"),legend.text=element_text(size=20) )
+  print(g)
+  dev.off()
+}
 
 #Now compute the within Chain Total Variation distance for 1000 randomly selected ordered pairs or samples
 
@@ -83,7 +72,7 @@ for(k in 1:K){
   TV_Beta_wIn[k,] = .5*apply(abs( Prob_Beta[[init]][[k]][[t]][c1,] - Prob_Beta[[init]][[k]][[t]][c2,]), 1, sum)
 }
 
-pdf("~/SCIOME/Writing/Figures/TV_Beta_wIn.pdf")
+pdf(paste(output_directory,"TV_Beta_wIn.pdf",sep="") )
 sa <- stack(as.data.frame( t(TV_Beta_wIn) ))
 names(sa)[2] = "Topic"
 sa$x <- rep(seq_len(ncol(TV_Beta_wIn)), nrow(TV_Beta_wIn))

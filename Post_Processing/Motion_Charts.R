@@ -1,12 +1,14 @@
 rm(list=ls())
 library(googleVis)
 init = 20115
-stem = "~/SCIOME/Code/"
-Corpus_name = "Pubmed_85_15"
+MCMC_directory = "~/SCIOME/Code/Reproducibility/"
+data_directory = "~/DLTM/Data/"
 html_path = "~/.public_html/Topic_Visualization/"
-load(file=paste(stem,"Reproducibility/Beta_",init,".RData", sep=""))
-load(file=paste(stem,"Reproducibility/Eta_",init,".RData", sep=""))
-load(file=paste(stem,"Vocab_Map_",Corpus_name,".RData",sep=""))
+Corpus_name = "Pubmed_85_15"
+
+load(file=paste(MCMC_directory,"Beta_",init,".RData", sep=""))
+load(file=paste(MCMC_directory,"Eta_",init,".RData", sep=""))
+load(file=paste(data_directory,"Vocab_Map_",Corpus_name,".RData",sep=""))
 
 t.T = 30
 K = 15
