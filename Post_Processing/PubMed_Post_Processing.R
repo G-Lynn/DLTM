@@ -1,7 +1,7 @@
 rm(list=ls())
 library(ggplot2)
 init = 20115
-MCMC_directory = "~/SCIOME/Code/Reproducibility/"
+MCMC_directory = "~/SCIOME/Code/Reproducibility/"  #directory for mcmc SUMMARIES
 output_directory = "~/DLTM/Figures/"
 data_directory = "~/DLTM/Data/"
 Corpus_name = "Pubmed_85_15"
