@@ -11,6 +11,7 @@ nCores = 8                # Number of cores to use for parallel computation
 K = 15                    #the number of topics in the corpus
 init = 1                  #the MCMC initialization for comparing multiple runs.
 Real_Data = TRUE;         #Boolean to use real data or synthetic data
+Misspecify_K = FALSE;     #Boolean to misspecify K
 
 #Choose the model for the data
 Model = "RW"; p = 1       #Model and dimension of state space
@@ -24,6 +25,7 @@ nSamples = 3000 #6000#
 thin = 100 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
+if(Misspecify_K == T) K_prime = K
 
 #-------Load Data-------------------------------------------- ----------------------
 #Real Data.  Only load one of these files.
@@ -33,6 +35,7 @@ if(Real_Data==TRUE){
     t.T = length(1985:2014)  #the total number of time points in the corpus
 }else{
     load(file = paste(stem,"Data/SynData",Model,".RData",sep="") )  #DTM synthetic data
+    K = K_prime
 }
 #K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
 
