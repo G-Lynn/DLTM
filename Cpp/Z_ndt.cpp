@@ -59,7 +59,7 @@ Rcpp::List Z_ndt(NumericVector N_D_t, NumericMatrix Beta_t, NumericMatrix W_t, N
         Z(i) = k+1;
         break;
       }
-      else if( ( U(i) > CumProb(k-1) ) && ( U(i)<CumProb(k) ) ){
+      else if( k>0 && ( U(i) > CumProb(k-1) ) && ( U(i)<CumProb(k) ) ){
         Z(i) = k+1;
         break;
       }
