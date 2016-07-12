@@ -39,7 +39,28 @@ if(Real_Data==TRUE){
 }
 #K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
 
-
+#split W into held out sample
+oo.sample.pct = .25
+W.oos = list()
+N.D.oos = list()
+for(t in 1:t.T){
+  W.oos[[t]] = matrix(nrow = 0, ncol = 2)
+  N.D.oos[[t]] = rep(NA,D[t])
+  for(d in 1:D[t]){
+    n.oos = floor(oo.sample.pct*N.D[[t]][d])
+    N.D.oos[[t]][d] = n.oos
+    N.D[[t]][d] = N.D[[t]][d] - n.oos
+    
+    doc.index = which(W[[t]][,2] == d )
+    index = sample(doc.index, size = n.oos,  replace=F )
+    tmp = matrix(nrow = n.oos, ncol = 2)
+    
+    tmp[,1] = W[[t]][index,1]
+    tmp[,2] = rep(d,n.oos)
+    W.oos[[t]] = rbind(W.oos[[t]], tmp)
+    W[[t]] = W[[t]][-index,]
+  }
+}
 #-------Load MCMC Wrappers for parallelization and C++ functions ----------------------
 
 #Now load required functions
@@ -73,7 +94,7 @@ source(paste(stem,"Alpha_Initialize.R",sep="") )       #initialize Alpha
 source(paste(stem, "Beta_Initialize.R",sep="") )        #initialize Beta
 sourceCpp(paste(stem,"Cpp/rpgApprox.cpp",sep="") )     # Approximate PG sampler in C++
 source(paste(stem,"Write_Prob_Time.R",sep="") )        # Wrapper for parallelization with write.table
-
+source(paste(stem,"Doc_Prob.R", sep="") )
 
 
 ########################################################################################
@@ -243,6 +264,8 @@ for(m in 1:N.MC){
     for(k in 1:K) Kappa_Beta_k[[k]][,t] = ZKappa[[t]][[2]][k,] 
   }
   
+  if( (m>B) && (m %% thin == 0) ) Doc_Completion_Prob(init, stem, nCores, t.T, N.D.oos, W.oos, Eta_t, Beta_t)
+
   if(m%%1000==0){
      message(paste("Init: ",init,"; Sample: ",m,sep=""))
   }
