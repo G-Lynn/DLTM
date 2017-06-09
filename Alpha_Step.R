@@ -28,5 +28,5 @@
 #' ALPHA =  Alpha_Step(MC.Cores = 2, K, t.T, a2, delta, m_alpha_k0, C_alpha_k0, FF, G, Eta_k )
 
 Alpha_Step<-function(MC.Cores, K, fnames_Alpha, m, B, thin, t.T, a2, delta, m_alpha_k0, C_alpha_k0, FF, G, Eta_k){
-  return( mclapply(1:K, function(k) Alpha_k_FFBS(fnames_Alpha[k], m, B, thin, t.T, a2, delta, m_alpha_k0, C_alpha_k0, FF, G, Eta_k[[k]]),mc.cores = MC.Cores ) )
+  return( mclapply(1:K, function(k) Alpha_k_FFBS(fnames_Alpha[k], m, B, thin, t.T, a2, delta[[k]], m_alpha_k0[[k]], C_alpha_k0[[k]], FF, G[[k]], Eta_k[[k]]),mc.cores = MC.Cores ) )
 }
