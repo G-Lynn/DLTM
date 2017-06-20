@@ -1,7 +1,10 @@
 rm(list=ls())
-load("~/SCIOME/Code/SynDataHarmonic.RData")
-foo.mult = "~/Desktop/dtm_release/dtm/example/SynHarmonic-mult.dat"
-foo.seq = "~/Desktop/dtm_release/dtm/example/SynHarmonic-seq.dat"
+load("~/Desktop/DLTM_check/DLTM/Data/DynCorp_Listings.RData")
+t.T = length(D)
+foo.mult = "~/Desktop/DLTM_check/DLTM/Variational/Listings-mult.dat"
+foo.seq = "~/Desktop/DLTM_check/DLTM/Variational/Listings-seq.dat"
+#foo.mult = "~/Desktop/dtm_release/dtm/example/SynHarmonic-mult.dat"
+#foo.seq = "~/Desktop/dtm_release/dtm/example/SynHarmonic-seq.dat"
 file.remove(foo.mult)
 file.remove(foo.seq)
 cat(file = foo.seq, paste(t.T,"\n",sep="") )
