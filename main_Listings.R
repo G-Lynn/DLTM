@@ -36,9 +36,9 @@ for(k in 1:K) omega[k] = 2*pi/12
 #omega[2] = 2*pi/12
 
 B = 0 #the number of samples to discard before writing to output
-burnIn = 10 #4000 #the number of samples to discard before computing summaries
-nSamples = 20 #6000#
-thin = 2 #100 #preferred
+burnIn = 1000 #4000 #the number of samples to discard before computing summaries
+nSamples = 2000 #6000#
+thin = 50 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
 if(Misspecify_K == T) K_prime = K
