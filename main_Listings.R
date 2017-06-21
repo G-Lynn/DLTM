@@ -6,10 +6,11 @@ library(Rcpp)           #required for compiling C++ code into R functions
 library(RcppArmadillo)  #required for Matrix operations in C++
 
 #User defined inputs
-stem = "/Users/christophergl1/Desktop/DLTM/DLTM-master/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
+stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
+variational_directory = paste(stem,"Variational/Listings_run/",sep="")
 nCores = 8                # Number of cores to use for parallel computation
-K = 25                    #the number of topics in the corpus
-init = 1                  #the MCMC initialization for comparing multiple runs.
+K = 15                    #the number of topics in the corpus
+init = 3                  #the MCMC initialization for comparing multiple runs.
 Real_Data = TRUE;         #Boolean to use real data or synthetic data
 Misspecify_K = FALSE;     #Boolean to misspecify K
 
@@ -35,9 +36,9 @@ for(k in 1:K) omega[k] = 2*pi/12
 #omega[2] = 2*pi/12
 
 B = 0 #the number of samples to discard before writing to output
-burnIn = 4000 #4000 #the number of samples to discard before computing summaries
-nSamples = 6000 #6000#
-thin = 100 #100 #preferred
+burnIn = 10 #4000 #the number of samples to discard before computing summaries
+nSamples = 20 #6000#
+thin = 2 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
 if(Misspecify_K == T) K_prime = K
@@ -55,7 +56,7 @@ if(Real_Data==TRUE){
 #K = 6  #to mis-specify K for synthetic data, enter it here.  It needs to be entered after the synthetic data is loaded because the synthetic data files contain the true number of topics.
 
 #split W into held out sample
-oo.sample.pct = .25
+oo.sample.pct = .05
 W.oos = list()
 N.D.oos = list()
 for(t in 1:t.T){
@@ -193,7 +194,14 @@ for(t in 1:t.T ){
 Beta_k = Beta_t = list()
 sigma2_beta_init = 2*sigma2_beta_kv0;  #last = .5 the initialization variance
 for(k in 1:K){
-  Beta_k[[k]] = Beta_Initialize(m_beta_kv0, sigma2_beta_init, sigma2, V, t.T)
+  #Beta_k[[k]] = Beta_Initialize(m_beta_kv0, sigma2_beta_init, sigma2, V, t.T)
+  #Initialize from the variational simulation.
+    if(k<11){
+      a = scan(paste(variational_directory,"/lda-seq/topic-00",(k-1),"-var-e-log-prob.dat", sep="") )
+    }else{
+      a = scan(paste(variational_directory,"/lda-seq/topic-0",(k-1),"-var-e-log-prob.dat", sep="") )
+    }
+    Beta_k[[k]] = matrix(a,ncol=t.T,byrow=T) 
 }
 
 # We will need both the list indexed by K, and the list indexed by t.  
@@ -239,7 +247,7 @@ for(t in 1:t.T){
 
 #-----ZETA Initialization---------------------------
 # Initialize Zeta as a list indexed by k.
-Zeta_k = list()
+Zeta_k = p_V = p_Z = list()
 Zeta_k = Zeta_Step(MC.Cores = nCores, K, V, ny, ny_thresh, Beta_k)
 
 #save(file="~/SCIOME/Code/DLTM.RData", Alpha_k, Alpha_t, Beta_k, Beta_t, D, Eta_k, Eta_t, FF, G, Kappa_Beta_k, Kappa_Eta_t, N.D, Omega_t, V, W, Zeta_k)
@@ -252,6 +260,10 @@ dir.create(paste(stem,"MCMC_Samples/Init_",init,sep=""))
 fnames_Beta = paste(stem,"MCMC_Samples/Init_",init,"/Beta_",1:K,".csv",sep="")
 fnames_Alpha = paste(stem,"MCMC_Samples/Init_",init,"/Alpha_",1:K,".csv",sep="")
 fnames_Eta = paste(stem,"MCMC_Samples/Init_",init,"/Eta_",1:t.T,".csv",sep="")
+
+#Store and save the log Likelihood for the WAIC calculation.  
+log.Lik = list() 
+for(t in 1:t.T) log.Lik[[t]] = matrix(nrow = (N.MC-burnIn)/thin, ncol = D[t])
 
 ptm = proc.time()
 for(m in 1:N.MC){
@@ -288,8 +300,10 @@ for(m in 1:N.MC){
   #Remember to update Beta_t 
   for(t in 1:t.T){
     for(k in 1:K ){
-      Beta_t[[t]][k,] = Beta_k[[k]][,t]   
+      Beta_t[[t]][k,] = Beta_k[[k]][,t]
     }
+    p_V[[t]] = exp(Beta_t[[t]]) / apply(exp(Beta_t[[t]]),1,sum)
+    #p_Z[[t]] = exp(Eta_t[[t]]) / apply(exp(Eta_t[[t]]),1,sum)
   }
   
   ZKappa = Z_Step(MC.Cores = nCores, t.T, N.D, Beta_t, W, Eta_t)
@@ -298,14 +312,28 @@ for(m in 1:N.MC){
     ny[,t] = ZKappa[[t]][[4]]
     Kappa_Eta_t[[t]] = ZKappa[[t]][[3]]
     for(k in 1:K) Kappa_Beta_k[[k]][,t] = ZKappa[[t]][[2]][k,] 
+    if( (m > burnIn) && (m %% thin == 0 ) ){
+      #compute the log multinomial likelihood for each document
+      log.Lik[[t]][(m-burnIn)/thin,] = sapply(1:D[t], function(i) lfactorial(N.D[[t]][i]) - sum( lfactorial(Doc[[t]][[i]]) ) + sum( log(sapply(1:N.D[[t]][i] , function(i_prime) p_V[[t]][ Z_t[[t]][i_prime], W[[t]][i_prime] ] ) ) ) )
+    }
   }
   
-  if( (m>B) && (m %% thin == 0) ) Doc_Completion_Prob(init, stem, nCores, t.T, N.D.oos, W.oos, Eta_t, Beta_t)
-
+  if( (m>B) && (m %% thin == 0) ){
+    Doc_Completion_Prob(init, stem, nCores, t.T, N.D.oos, W.oos, Eta_t, Beta_t)
+  }
+  
   if(m%%1000==0){
      message(paste("Init: ",init,"; Sample: ",m,sep=""))
   }
 }#end MCMC
 message(proc.time()[3]-ptm[3])
+
+#compute WAIC
+lpd.hat = sum( sapply(1:t.T, function(t) sum( log( apply( exp(log.Lik[[t]]) ,2,mean ) ) ) ) )
+p.hat.WAIC = sum( sapply(1:t.T, function(t) sum( apply( log.Lik[[t]], 2, var) ) ) ) 
+elpd.hat.WAIC = lpd.hat - p.hat.WAIC
+WAIC = -2*elpd.hat.WAIC
+save(file = paste(stem,"MCMC_Summaries/WAIC_",init,".RData",sep=""), log.Lik, lpd.hat, p.hat.WAIC, elpd.hat.WAIC, WAIC)
+
 source(paste(stem,"post_summaries.R",sep="") )
 
