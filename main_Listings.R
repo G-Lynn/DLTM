@@ -6,11 +6,13 @@ library(Rcpp)           #required for compiling C++ code into R functions
 library(RcppArmadillo)  #required for Matrix operations in C++
 
 #User defined inputs
-stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
-variational_directory = paste(stem,"Variational/Listings_run/",sep="")
+#stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
+stem = "/home/grad/cdg28/DLTM/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
-K = 15                    #the number of topics in the corpus
-init = 3                  #the MCMC initialization for comparing multiple runs.
+K = 3                    #the number of topics in the corpus
+variational_directory = paste(stem,"Variational/Listings_Run_",K,"/",sep="")
+run = 2
+init = paste(K,"_",run,sep="")                  #the MCMC initialization for comparing multiple runs.
 Real_Data = TRUE;         #Boolean to use real data or synthetic data
 Misspecify_K = FALSE;     #Boolean to misspecify K
 
@@ -38,7 +40,7 @@ for(k in 1:K) omega[k] = 2*pi/12
 B = 0 #the number of samples to discard before writing to output
 burnIn = 1000 #4000 #the number of samples to discard before computing summaries
 nSamples = 2000 #6000#
-thin = 50 #100 #preferred
+thin = 10 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
 if(Misspecify_K == T) K_prime = K
