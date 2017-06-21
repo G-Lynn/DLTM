@@ -17,6 +17,7 @@ ym.index = list()
 DynCorpus = list()
 D = rep(NA,nDates)
 W = list()
+Doc = list()
 N.D = list()
 doc_length_thresh = 20 #this is like saying the CLT only takes 20 samples to kick in.  Aggressive
 
@@ -31,7 +32,7 @@ for(t in 1:nDates){
   WordDoc = NULL
   index = 0
   N.docs.t = length(ym.index[[t]])
-  
+  Doc[[t]] = list()
   for(i in 1:N.docs.t){
     #replace abbreviations with root
     if( any( is.element(Listings[[ ym.index[[t]][i] ]]$Description_Numeric,Abbreviations$Index) ) ){
@@ -56,7 +57,8 @@ for(t in 1:nDates){
     #relabel the words by the order they take in the Truncated Vocabulary
     Words = sapply(1:n_words_trunc, function(i) which(Vocab_index==words[i]))
     #I think that I can thin over-represented words here.  
-    
+    Doc[[t]][[i]] = rep(0,V)
+    for(v in 1:V) Doc[[t]][[i]][v] = sum(Words==v)
     
     #append the Words to the time-specific matrix keeping the document they came from
     WordDoc = rbind( WordDoc, data.frame(Words = Words, Doc = rep(index, n_words_trunc)) )
@@ -71,5 +73,4 @@ for(t in 1:nDates){
 #How many documents are there?  
 Vocab_Map_Final = Vocab_Map
 
-save(file = paste("~/Desktop/DLTM/DLTM-master/Data/DynCorp_",Corpus_name,".RData",sep=""),W,D,N.D,V,Vocab_index, nDates, Vocab_Map_Final, Dates)
-
+save(file = paste("~/Desktop/DLTM/DLTM-master/Data/DynCorp_",Corpus_name,".RData",sep=""),Doc,W,D,N.D,V,Vocab_index, nDates, Vocab_Map_Final, Dates)
