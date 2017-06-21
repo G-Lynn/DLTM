@@ -15,6 +15,8 @@ DynCorpus = list()
 D = rep(NA,nDates)
 W = list()
 N.D = list()
+Vocabulary = cbind(Vocabulary,1:dim(Vocabulary)[1])
+
 Vocab.Trunc.index = which(Vocab.counts>=25)
 Vocab.Trunc = Vocabulary[Vocab.Trunc.index,]
 Vocab.Trunc = Vocab.Trunc[-which(Vocab.Trunc[,1]=="\xfc\xbe\x99\x96\x88\xbc"),] #Some nonsense characters that got passed through
@@ -52,7 +54,7 @@ Vocab_Map = Vocab.Trunc[Vocab.Trunc.index_1,]
 Vocab.Trunc.index_1 = Vocab.Trunc.index_1[ is.na( as.numeric(Vocab_Map[,1])) ]
 Vocab_Map = Vocab_Map[ is.na( as.numeric(Vocab_Map[,1])), ]
 
-Vocab_Map = cbind(Vocab_Map,Vocab.Trunc.index_1,Min.Vocab.t[Vocab.Trunc.index_1],Max.Vocab.t[Vocab.Trunc.index_1],Tot.Vocab.t[Vocab.Trunc.index_1] )
+Vocab_Map = cbind(Vocab_Map,Min.Vocab.t[Vocab.Trunc.index_1],Max.Vocab.t[Vocab.Trunc.index_1],Tot.Vocab.t[Vocab.Trunc.index_1] )
 colnames(Vocab_Map) = c("Full", "Stem", "Index", "Min", "Max", "Total")
 #write this to CSV to hand select terms
 write.csv(file = paste("~/Desktop/DLTM/DLTM-master/Data/Vocab_Map_Long",Corpus_name,".csv",sep=""), x = Vocab_Map )
