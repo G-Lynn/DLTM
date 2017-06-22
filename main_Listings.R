@@ -335,7 +335,7 @@ lpd.hat = sum( sapply(1:t.T, function(t) sum( log( apply( exp(log.Lik[[t]]) ,2,m
 p.hat.WAIC = sum( sapply(1:t.T, function(t) sum( apply( log.Lik[[t]], 2, var) ) ) ) 
 elpd.hat.WAIC = lpd.hat - p.hat.WAIC
 WAIC = -2*elpd.hat.WAIC
-save(file = paste(stem,"MCMC_Summaries/WAIC_",init,".RData",sep=""), log.Lik, lpd.hat, p.hat.WAIC, elpd.hat.WAIC, WAIC)
+save(file = paste(stem,"MCMC_Summaries/WAIC_",init,".RData",sep=""), lpd.hat, p.hat.WAIC, elpd.hat.WAIC, WAIC)
 
 source(paste(stem,"post_summaries.R",sep="") )
 
