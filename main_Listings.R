@@ -9,7 +9,7 @@ library(RcppArmadillo)  #required for Matrix operations in C++
 #stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
 stem = "/home/grad/cdg28/DLTM/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
-K = 3                    #the number of topics in the corpus
+K = 5                    #the number of topics in the corpus
 variational_directory = paste(stem,"Variational/Listings_Run_",K,"/",sep="")
 run = 2
 init = paste(K,"_",run,sep="")                  #the MCMC initialization for comparing multiple runs.
@@ -316,7 +316,7 @@ for(m in 1:N.MC){
     for(k in 1:K) Kappa_Beta_k[[k]][,t] = ZKappa[[t]][[2]][k,] 
     if( (m > burnIn) && (m %% thin == 0 ) ){
       #compute the log multinomial likelihood for each document
-      log.Lik[[t]][(m-burnIn)/thin,] = sapply(1:D[t], function(i) lfactorial(N.D[[t]][i]) - sum( lfactorial(Doc[[t]][[i]]) ) + sum( log(sapply(1:N.D[[t]][i] , function(i_prime) p_V[[t]][ Z_t[[t]][i_prime], W[[t]][i_prime] ] ) ) ) )
+      log.Lik[[t]][(m-burnIn)/thin,] = sapply(1:D[t], function(i) sum( log(sapply(1:N.D[[t]][i] , function(i_prime) p_V[[t]][ Z_t[[t]][i_prime], W[[t]][i_prime] ] ) ) ) )
     }
   }
   
