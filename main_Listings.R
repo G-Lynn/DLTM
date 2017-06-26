@@ -9,7 +9,7 @@ library(RcppArmadillo)  #required for Matrix operations in C++
 #stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
 stem = "/home/grad/cdg28/DLTM/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
-K = 5                    #the number of topics in the corpus
+K = 10                    #the number of topics in the corpus
 variational_directory = paste(stem,"Variational/Listings_Run_",K,"/",sep="")
 run = 2
 init = paste(K,"_",run,sep="")                  #the MCMC initialization for comparing multiple runs.
@@ -331,7 +331,7 @@ for(m in 1:N.MC){
 message(proc.time()[3]-ptm[3])
 
 #compute WAIC
-lpd.hat = sum( sapply(1:t.T, function(t) sum( log( apply( exp(log.Lik[[t]]) ,2,mean ) ) ) ) )
+lpd.hat = sum( sapply(1:t.T, function(t) sum( log( apply( exp(log.Lik[[t]]) + .Machine$double.xmin,2,mean ) ) ) ) )
 p.hat.WAIC = sum( sapply(1:t.T, function(t) sum( apply( log.Lik[[t]], 2, var) ) ) ) 
 elpd.hat.WAIC = lpd.hat - p.hat.WAIC
 WAIC = -2*elpd.hat.WAIC
