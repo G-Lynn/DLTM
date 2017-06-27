@@ -2,16 +2,17 @@ rm(list=ls())
 library(ggplot2)
 
 # User defined inputs
-init = 2
+K = 5
+run = 2
+init = paste(K,run,sep="_")
 
 # all directories must end with /
-MCMC_directory = "~/Desktop/DLTM/DLTM-master/MCMC_Summaries/"  #directory for mcmc SUMMARIES
-output_directory = "~/Desktop/DLTM/DLTM-master/Figures/"       #directory for figures
-data_directory = "~/Desktop/DLTM/DLTM-master/Data/"            #directory for data
+MCMC_directory = "~/Desktop/DLTM_check/DLTM/MCMC_Summaries/"  #directory for mcmc SUMMARIES
+output_directory = "~/Desktop/DLTM_check/DLTM/Figures/"       #directory for figures
+data_directory = "~/Desktop/DLTM_check/DLTM/Data/"            #directory for data
 
 Corpus_name = "Listings"                      #corpus name.  probably doesn't need to be changed.  
 t.T = 112  #total number of time points
-K = 10    #number of topics
 
 # End of user defined inputs
 
@@ -52,6 +53,7 @@ for(k in 1:K){
      TopWords[,k] = Vocab_Map[x,2]
 }
 
+write.csv(file = paste(output_directory,"TopWords_",init,".csv",sep=""), TopWords )
 
 index = 1:K
 pdf(paste(output_directory,"Topic_Proportions_",init,".pdf", sep="") )
@@ -66,17 +68,6 @@ g = ggplot(Comparison, aes(x=Time) ) +
   print(g)
 dev.off()
 
-index = c(2,3,6,8)
-pdf(paste(output_directory,"Topic_Proportions_",init,".pdf", sep="") )
-Comparison = data.frame(Time = rep(1:t.T, times = length(index)), Probability = c( t(P.Z.mean[index,]) ), CI.025 = c( t(CI.025[index,]) ), CI.975 = c( t(CI.975[index,]) ), Topic = factor(rep(index, each=t.T)) ) 
-g = ggplot(Comparison, aes(x=Time) ) + 
-  geom_line(aes(y=Probability, group = Topic, color = Topic), size = .5) + 
-  #geom_line(aes(x = Time, y=CI.025, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
-  #geom_line(aes(x = Time, y=CI.975, group = Topic, color = Topic), size = 1, alpha = .80, linetype=2 ) +
-  xlab("Time") + 
-  ylab("Probability")+
-  theme(axis.text=element_text(size=20, color = "black"),axis.title=element_text(size=24,face="bold"), legend.text=element_text(size=20))
-print(g)
-dev.off()
+# .5*apply(abs(Prob_Beta_1[[t.T]] - Prob_Beta_2[[t.T]]),1,sum)
 
 
