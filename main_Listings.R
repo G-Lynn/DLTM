@@ -11,7 +11,7 @@ stem = "/home/grad/cdg28/DLTM/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
 K = 10                    #the number of topics in the corpus
 variational_directory = paste(stem,"Variational/Listings_Run_",K,"/",sep="")
-run = 2
+run = 8
 init = paste(K,"_",run,sep="")                  #the MCMC initialization for comparing multiple runs.
 Real_Data = TRUE;         #Boolean to use real data or synthetic data
 Misspecify_K = FALSE;     #Boolean to misspecify K
