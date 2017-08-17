@@ -1,5 +1,5 @@
 rm(list=ls())
-install.packages(c("Rcpp","RcppArmadillo","parallel") )
+#install.packages(c("Rcpp","RcppArmadillo","parallel") )
 library(MASS)           #required for the multivariate normal sampler
 library(parallel)       #required for mclapply and parallel computation 
 library(Rcpp)           #required for compiling C++ code into R functions
@@ -7,11 +7,12 @@ library(RcppArmadillo)  #required for Matrix operations in C++
 
 #User defined inputs
 stem = "/home/grad/cdg28/SCIOME/Code/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
+stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
-K = 15                    #the number of topics in the corpus
-init = 1                  #the MCMC initialization for comparing multiple runs.
-Real_Data = TRUE;         #Boolean to use real data or synthetic data
-Misspecify_K = FALSE;     #Boolean to misspecify K
+K = 3                    #the number of topics in the corpus
+init = paste("syn",K,sep="_")                  #the MCMC initialization for comparing multiple runs.
+Real_Data = FALSE;         #Boolean to use real data or synthetic data
+Misspecify_K = TRUE;     #Boolean to misspecify K
 
 #Choose the model for the data
 Model = "RW"; p = 1       #Model and dimension of state space
@@ -116,9 +117,22 @@ sigma2 = .01 # .001 #works for V = 1000
 #---ALPHA--------------------------------
 #prior at t=0 for each alpha^{p x 1} state vector in the k-th topic
 
-m_alpha_k0 = matrix(rep(0,p), nrow = p, ncol = 1)  #prior mean  
-C_alpha_k0 = .1*diag(p) 
-delta = rep(.025,p)
+#m_alpha_k0 = matrix(rep(0,p), nrow = p, ncol = 1)  #prior mean  
+#C_alpha_k0 = .1*diag(p) 
+#delta = rep(.025,p)
+
+m_alpha_k0 = list()
+C_alpha_k0 = list()
+delta = list()
+
+for(k in 1:K){
+  m_alpha_k0[[k]] = matrix(rep(0,p), nrow = p, ncol = 1)  #prior mean
+  #C_alpha_k0[[k]] = matrix(c(.01,0,0,.0000001), nrow = p, ncol = p)
+  C_alpha_k0[[k]] = .1*diag(p) 
+  #delta[[k]] = c(.005,.00001)
+  delta[[k]] = rep(.025,p)
+}
+
 a2 = .25  
 
 
@@ -134,10 +148,12 @@ for(t in 1:t.T){
 }
 
 
-G = matrix(0,nrow = p, ncol = p)
-G[upper.tri(G,diag=T)]=1
-if(Model == "Harmonic") G = matrix(c(cos(omega), sin(omega), -sin(omega), cos(omega) ), byrow=T, ncol=p)
-#---ETA----------------------------------
+GG = list()
+for(k in 1:K){
+  GG[[k]] = matrix(0,nrow = p, ncol = p)
+  GG[[k]][upper.tri(GG[[k]],diag=T)]=1
+  if(Model == "Harmonic") GG[[k]] = matrix(c(cos(omega[k]), sin(omega[k]), -sin(omega[k]), cos(omega[k]) ), byrow=T, ncol=p)
+}
 
 ########################################################################################
 #MCMC specifics and initialization
@@ -145,7 +161,7 @@ if(Model == "Harmonic") G = matrix(c(cos(omega), sin(omega), -sin(omega), cos(om
 #---ALPHA Initialization-------------------------------
 Alpha_k = Alpha_t = list()
 
-for(k in 1:K ) Alpha_k[[k]] = Alpha_Initialize(m_alpha_k0, G, C_alpha_k0, delta, t.T)
+for(k in 1:K ) Alpha_k[[k]] = Alpha_Initialize(m_alpha_k0[[k]], GG[[k]], C_alpha_k0[[k]]/100, delta[[k]], t.T)
 
 for(t in 1:t.T ){
   Alpha_t[[t]] = matrix(nrow = p, ncol = K )
@@ -246,8 +262,7 @@ for(m in 1:N.MC){
       Eta_k[[k]][[t]] = Eta_t[[t]][,k]
     }
   }
-  Alpha_k =  Alpha_Step(MC.Cores = nCores, K, fnames_Alpha, m, B, thin, t.T, a2, delta, m_alpha_k0, C_alpha_k0, FF, G, Eta_k )
-
+  Alpha_k =  Alpha_Step(MC.Cores = nCores, K, fnames_Alpha, m, B, thin, t.T, a2, delta, m_alpha_k0, C_alpha_k0, FF, GG, Eta_k )
   #-----Z Step---------------------------------------
   #Remember to update Beta_t 
   for(t in 1:t.T){
