@@ -6,8 +6,8 @@ library(Rcpp)           #required for compiling C++ code into R functions
 library(RcppArmadillo)  #required for Matrix operations in C++
 
 #User defined inputs
-stem = "/home/grad/cdg28/SCIOME/Code/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
-stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"
+stem = "/home/grad/cdg28/DLTM/DLTM/"  # path to the DLTM directory.  Needs to be full path.  No ~/ or .. allowed
+#stem = "/Users/christophergl1/Desktop/DLTM_check/DLTM/"
 nCores = 8                # Number of cores to use for parallel computation
 K = 3                    #the number of topics in the corpus
 init = paste("syn",K,sep="_")                  #the MCMC initialization for comparing multiple runs.
@@ -21,8 +21,8 @@ Model = "RW"; p = 1       #Model and dimension of state space
 #Model = "Harmonic"; p = 2; 
 
 B = 0 #the number of samples to discard before writing to output
-burnIn = 2000 #4000 #the number of samples to discard before computing summaries
-nSamples = 3000 #6000#
+burnIn = 1000 #2000 #4000 #the number of samples to discard before computing summaries
+nSamples = 2000 #3000 #6000#
 thin = 100 #100 #preferred
 N.MC = B + thin*nSamples  #total number of MCMC iterations.
 
