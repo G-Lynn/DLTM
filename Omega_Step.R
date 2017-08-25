@@ -21,5 +21,19 @@
 #' Omega_t = Omega_Step(MC.Cores = 2, t.T, N.D, Eta_t)
 
 Omega_Step<-function(MC.Cores, t.T,N.D, Eta_t){
-  return( mclapply(1:t.T, function(t) Omega_dkt(N.D[[t]], Eta_t[[t]] ), mc.cores = MC.Cores ) )
+  retx = mclapply(1:t.T, function(t) Omega_dkt(N.D[[t]], Eta_t[[t]] ), mc.cores = MC.Cores )
+  
+  for(t in 1:t.T){
+    if(any(N.D[[t]]<20)){
+      index = which(N.D[[t]]<20)
+      
+      for(d in 1:length(index)){
+        psi = Eta_t[[t]][index[d],] - log( sum( exp( Eta_t[[t]][index[d],] ) ) - exp( Eta_t[[t]][index[d],] ) )
+        retx[[t]][index[d],] = rpg.devroye(length(psi), N.D[[t]][index[d] ],psi )
+        }
+      }else{
+      next
+    }
+  }
+  return(retx)
 }
