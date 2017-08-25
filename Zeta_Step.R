@@ -21,5 +21,17 @@
 
 
 Zeta_Step<-function(MC.Cores, K, V, ny, ny_thresh, Beta_k){
-  return(mclapply(1:K, function(k) Zeta_kvt(ny[k,],Beta_k[[k]]),mc.cores = MC.Cores ))
+  retx = mclapply(1:K, function(k) Zeta_kvt(ny[k,],Beta_k[[k]]),mc.cores = MC.Cores )
+  for(k in 1:K){
+    if(any(ny[k,]<20)){
+      index = which(ny[k,]<20)
+      for(t in index){
+        gamma = Beta_k[[k]][,t] - log( sum( exp( Beta_k[[k]][,t] ) ) - exp( Beta_k[[k]][,t] ) )
+        retx[[k]][,t] = rpg.devroye(V, ny[k,t] , gamma )
+      }
+    }else{
+      next
+    }
+  }
+  return(retx)
 }
