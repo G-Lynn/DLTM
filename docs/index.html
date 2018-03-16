@@ -4,7 +4,6 @@ title: index
 ---
 
 <section>
-  <h1>Motivation:</h1> 
   <h2>Unstructured data is a rich source of information</h2>
   <p>Data can typically be categorized as either <i>structured</i> or <i>unstructured</i>.  Structured data, like that found in spreadsheets and relational databases, has a standard format.  As an example of structured data, the prices of homes in a neighborhood can be represented by a two column table, one column for an identifier of each house, and the second column for the price. As a result, structured data is easy to query, sort, and explore with standard tools.  By contrast, unstructured data -- like pictures, video, and text -- lacks a standard format for presenting information.  Idiosyncracies in form and style mean that identifying valuable pieces of information is more difficult.  The challenge of learning from unstructured data is pushing the frontiers of artificial intelligence, machine learning, and statistics.</p>  
 
@@ -14,22 +13,34 @@ title: index
 </section>
 
 <section>
-  <h1>Objective:</h1> 
   <h2>Learn complex dynamic patterns in collections of real estate listings </h2></h1>
-  <p> The objective of this analysis is threefold: first, we want to <b>learn from a collection of text</b> the themes that .  We call these themes <i>topics</i>.  Each topic is defined as a probability distribution over the total vocabulary.   </p>
+  <p> The goal of this analysis is threefold: first, we want to <b>learn from a set of real estate listings</b> the important themes in a particular market and understand how these themes change over time; second, we want to understand the relative importance of each theme in the overall market; and third, we want to understand how much each theme contributes to individual listing descriptions.</p>
+  
+  <p>One way of learning themes from text is with topic models.  Topic models represent themes in text with probabilities.  A topic is defined as a probability distribution over all the possible words that could be used to create a document.  A real estate topic about kitchens may place high probabilities on words like <i>appliances, stainless steel, and granite</i> but very low probability placed on words like <i>garden, patio, and backyard</i>.  On the other hand, a topic focused on outdoor spaces may place high probability on <i>garden, patio, backyard</i>, but give very little weight to kitchen-related terms.  Our first goal is to learn these topics from the listing descriptions.</p>
+  
+  <p>One particularly important element of real estate markets is that they are always changing.  Evolution in market conditions is reflected in prices, the amount of time needed to sell a home, and even in the listing description.  Sellers and agents describe a home to make it most appealing in a dynamic marketplace.  Emphasizing a home's garden when selling in the summer or it's fireplace when selling in winter is a natural way of appealing to current buyer preferences. While some market themes may recur seasonally, others may significantly increase (decrease) in importance from one year to the next, like when neighborhoods become more desirable or fall out of favor.  Such market trends can persist for many years.  Our second goal is to learn the complicated dynamic patterns that topics (themes) exhibit.</p>
+  
+<p>While some Zillow users are interested in overall market patterns, most are looking for a specific home.  The choice of a home is very personal: some prefer homes that are cozy and cute; others are looking for renovated classics.  Ideally, the unique features of a home match the individual preferences of the buyer. Classifying individual listings by their themes may lead to improved recommendations to Zillow users.  This is why our third goal is to understand how much each topic contributes to individual listings.</p>      
 </section>
 
 
 <section>
-  <h1>Data:</h1>
   <h2>Real estate listings from Zillow</h2>
+  <p>The data used for this analysis is a collection of more than 11,000 listing descriptions from Seattle, Washington from November of 2007 to March of 2017.  Each listing is summarized by the number of times each word appears.  This `bag of words' approach is standard in topic modeling, and it facilitates the dynamic modeling strategy discussed below.</p>  
 </section>
 
 <section>
-  <h1>Method:</h1>
   <h2>Dynamic Linear Topic Models (DLTM)</h2>
-  
-  
+  <p>To describe the statistical method used to learn the topics and their dynamic patterns, let's think about <i>generating a new listing</i>.  We begin with a vocabulary, which is the predefined set of words that can appear in all the listings.  Next, we choose a number of themes.  Let's imagine that we want to create a set of listings to represent two different themes: location and indoor spaces. Each of these topics will correspond to a different `bag of words.'  We can think of each bag containing ping pong balls marked by vocabulary words.  For example, in the bag of words associated with location, there will be many ping pong balls with words like <i>neighborhood</i> and <i>school</i> so that if we reach into the bag and randomly select a ball, it is likely that the word on the ball will describe the location.</p>
+
+<p>Let's `write' a new listing in March 2018 with 100 words.  To choose the first word in the listing, we need to reach into one of the two bags to draw a ping pong ball.  Which one do we choose? In this model, we choose the bag by flipping a coin.  If we flip heads, we choose the location bag.  If we flip tails, we choose the indoor spaces bag.  Let's say we flipped tails, and we choose the first word in our listing by reaching into the indoor spaces bag and randomly drawing one of the ping pong balls.  It's marked <i>kitchen</i>.  <i>Kitchen</i> is the first word in our new listing.</p>
+
+<p>To write the second word, we repeat the process by again flipping a coin to choose one of the two bags.  Let's say this time we flipped heads, and we draw the word <i>downtown</i> from the location bag.  <i>Downtown</i> is our second word.  This process repeats until the hundredth word is selected and the new listing is complete.</p>  
+
+<p>In June 2018, we want to write another new listing.  To represent the passage of time, the bags of words are <b>slightly</b>changed.  In the location bag, there are a few more ping pong balls with the term <i>lake</i> and a few less ping pong balls with <i>highway</i>.  The indoor spaces bag will also slightly change.  In addition to the bags themselves changing, the coin we flip to choose the bag also changes.  Now instead of a 50-50 chance of flipping heads (location), now there is a 70 percent chance of flipping heads.  With both the bags of words and the coin changed by the passage of three months, we again write the document by flipping the coin, choosing a bag, and selecting a ping pong ball from the bag.</p>  
+
+<p>In this example, we are writing new listings with a randomized procedure.  With the actual data, essentially invert the process.  The listings are observed, but we <b>do not observe the bags of words or the coin</b> used to choose the bags.  We must learn them.  Our first goal is to use the listings data to estimate the percentage of ping pong balls in the location bag associated with each word.  We estimate the percentages in each bag of words at each time point. This corresponds to learning the topics and how the topics change over time.  Our second goal is to learn the probability of flipping a heads (i.e. selecting the location topic). We want to learn the probability of each topic at each time point.  In models with more than two topics, think about flipping a coin with many sides. This corresponds to learning the importance of each topic in the corpus as a whole and how that importance changes over time.</p>
+
 </section>
 <!-- MotionChart generated in R 3.3.1 by googleVis 0.6.2 package -->
 <!-- Thu Mar 15 13:29:15 2018 -->
