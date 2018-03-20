@@ -29,6 +29,11 @@ title: index
 </section>
 
 <section>
+  <h2>Real estate listings from Zillow</h2>
+  <p>The data used for this analysis is a collection of more than 11,000 listing descriptions from Seattle, Washington from November of 2007 to March of 2017.  Each listing is summarized by the number of times each word appears.  This <b>bag of words</b> approach is standard in topic modeling, and it facilitates the dynamic modeling strategy discussed below.</p>  
+</section>
+
+<section>
   <h2>Dynamic Linear Topic Models (DLTM)</h2>
   <p>To describe the statistical method used to learn the topics and their dynamic patterns, let's think about a procedure for <i>writing a new listing</i> .  The procedure begins with a vocabulary, which is the predefined set of words that can appear in all the listings.  Next, we choose the number of themes that we want the collection to contain.  For simplicity, let's imagine a set of listings containing two different themes: location and indoor spaces. Each of these topics will correspond to a different bag of words.  We can think of each bag containing ping pong balls marked by vocabulary words.  For example, in the bag of words associated with location, there will be many ping pong balls with words like <i>neighborhood</i> and <i>school</i> so that if we reach into the bag and randomly select a ball, it is likely that the word on the selected ball will describe the location.</p>
 
@@ -43,15 +48,10 @@ title: index
 <p>The innovation of the Dynamic Linear Topic Model is the ability to model complicated patterns in the probability of selecting each topic.  Imagine that we want to use the same coin to select topics in March 2019 as we do in March 2018.  It is possible to model this repeated use of the same coing as <b>seasonality</b> in the topic probabilities.  It is also possible to model probabiliies that rapidly increase or decrease from one month to the next.</p>
 
 <section>
-  <h2>Real estate listings from Zillow</h2>
-  <p>The data used for this analysis is a collection of more than 11,000 listing descriptions from Seattle, Washington from November of 2007 to March of 2017.  Each listing is summarized by the number of times each word appears.  This <b>bag of words</b> approach is standard in topic modeling, and it facilitates the dynamic modeling strategy discussed below.</p>  
-</section>
-
-<section>
   <h2>Topics in the listings data</h2>
   <p>The topics that we present below were learned from the data without any specification of overall theme or any other user guidance.  The topics reflect clusters of words that appear together with high probability.  The names are given after the analysis by observing the theme of some top keywords.</p>
   
-<p>The topics are ordered in terms of their overall prevalence in the listings data.  Topic 1 is the most prevalent topic in the collection.  Topic 10 is the least prevalent.  The visualization below presents the average contribution of the 10 topics used in the analysis to the collection of listings from Q1 2008 to Q4 2016.  The figure presents the time-varying patterns that each topic exhibits (objective two of the analysis).  Detailed comments about the dynamic behavior of each topic are made when the topics themselves (objective one) are introduced.  The breakdown of each individual listing by topic (objective three) is available but not the focus of the results below.</p>
+<p>The topics are ordered in terms of their overall prevalence in the listings data.  Topic 1 is the most prevalent topic in the collection.  Topic 10 is the least prevalent.  The visualization below presents the average contribution of the 10 topics used in the analysis to the collection of listings as a whole.  The figure presents the time-varying patterns that each topic exhibits (objective two of the analysis) from Q1 2008 to Q4 2016.  Detailed comments about the dynamic behavior of each topic are made when the topics themselves (objective one) are introduced.  The breakdown of each individual listing by topic (objective three) is available but not the focus of the results below.</p>
 </section>
 
 <!-- MotionChart generated in R 3.3.1 by googleVis 0.6.2 package -->
@@ -1933,7 +1933,6 @@ callbacks.shift()();
 }, 100);
 }
 
-<!--
 // jsFooter
 </script>
 
@@ -1951,12 +1950,14 @@ callbacks.shift()();
 <div><span>Data: Z_prob &#8226; Chart ID: <a href="Chart_MotionChartID182b34b303a10.html">MotionChartID182b34b303a10</a> &#8226; <a href="https://github.com/mages/googleVis">googleVis-0.6.2</a></span><br />
 <!-- MotionChart generated in R 3.3.1 by googleVis 0.6.2 package -->
 <!-- Thu Mar 15 13:29:17 2018 -->
--->
+
 
 <p></p>
 <section>
   <h2>Topic 1: Common elements of a home</h2>
-  <p>The first topic represents the common elements of a home.  With keywords like <i>room, bedroom, bath, floors, dining, and kitchen,</i> the topic identifies words that are used most frequently to describe the inside of a house.  The keyword probabilities slightly fluctuate through time, but the overall theme remains clear.  Unsurprisingly, this topic is the most prevalent in the collection.  On average, 30% of each listing is allocated to the common elements of a home.</p> 
+  <p>The first topic represents the common elements of a home.  With keywords like <i>room, bedroom, bath, floors, dining, and kitchen,</i> the topic identifies words that are used most frequently to describe the inside of a house.  The keyword probabilities slightly fluctuate through time, but the overall theme remains clear.  Unsurprisingly, this topic is the most prevalent in the collection.</p>  
+  
+<p>On average, 30% of each listing is consistently characterized by the common elements of a home.</p> 
 </section>
 
 <!-- jsHeader -->
@@ -38056,6 +38057,8 @@ callbacks.shift()();
 <section>
   <h2>Topic 2: Location</h2>
   <p> Topic 2 is defined by keywords like <i>home, parks, located, close, access, downtown, Seattle, shops, restaurants, school, walk, rail, and neighborhood</i>.  A home's location is the clear theme of this topic.  Note that the in the first quarter of 2008, the most likely word in the topic is <i>home</i>, but by Q4 2016 <i>parks</i> emerges as the most likely keyword. The overall probability of <i>home</i> is cut in half, and other location-themed terms have increased in probability.</p>
+  
+<p>When the proportional contribution of topic 2 to the corpus as a whole is examined, we find that the prevalence of topic 2 peaks in September of 2008 (21.7%).  It bottoms out in May 2010 (13.8%), and then steadily climbs through 2016 to recover the September 2008 level.</p>
 </section>
 
 <!-- jsHeader -->
@@ -74157,7 +74160,7 @@ callbacks.shift()();
   <h2>Topic 3: Modern design elements and outdoor spaces </h2>
   <p> Topic 3 is characterized by keywords <i>home, private, design, natural, light, open, spaces, modern, outdoor, garden, desck, patio, and landscaping.</i> While the probabilities of these keywords are necessarily small because of the large number of words in the vocabulary, the probabilities of many terms undergo significant changes from Q1 2008 to Q4 2016: the term <i>spaces</i> increases in probability from 0.0214 to 0.0496, a 130% increase over 9 years; the term <i>open</i> increases in probability by 31%, and the probability of <i>outdoor</i> increases by 83%.</p>
 
-<p>In addition to the evolution of the term probabilities within the topic, the average proportion of listings that are characterized by topic 3 may change with time.  In topic 3, it is natural to expect seasonal fluctuations given the outdoor emphasis of the topic.  We will return to this point.</p> 
+<p>In addition to the evolution of the term probabilities within the topic, the average proportion of listings that are characterized by topic 3 may change with time.  In topic 3, it is natural to expect seasonal fluctuations given the outdoor emphasis of the topic.  We find that topic 3 is typically more prevalent in Q2 and Q3 and is markedly lower in Q1 and Q4.</p> 
 </section>
 
 <!-- jsHeader -->
@@ -110256,7 +110259,9 @@ callbacks.shift()();
 <p></p>
 <section>
   <h2>Topic 4: Remodeled and renovated homes</h2>
-  <p>In topic 4, keywords include <i>new, updated, windows, roof, painted, plumbing, remodeled, kitchen, refinished, hardwoords, and updated.</i>  These words all describe homes that are renovated.  The term <i>newer</i> increases in probability from 0.013 in Q1 2008 to 0.062 in Q4 2016, a 376% increase.  On average, 10% of each listing is characterized by home improvements and updates.</p>
+  <p>In topic 4, keywords include <i>new, updated, windows, roof, painted, plumbing, remodeled, kitchen, refinished, hardwoords, and updated.</i>  These words all describe homes that are renovated.  The term <i>newer</i> increases in probability from 0.013 in Q1 2008 to 0.062 in Q4 2016, a 376% increase.</p>
+  
+<p>On average, 10% of each listing is characterized by home improvements and updates.</p>
 </section>
 
 <!-- jsHeader -->
@@ -146356,7 +146361,9 @@ callbacks.shift()();
 <p></p>
 <section>
   <h2>Topic 5: Luxury items</h2>
-  <p>Luxury finishes are captured in topic 5 with keywords like <i>master, bath, suite, kitchen, granite, counter, stainless, appliances, tub, shower, gas, range, walk, closet, and custom.</i>  The focus on luxury kitchens significantly increases from 2008-2016 with two separate jumps.  The first jump occurs from Q1 2008 to Q1 2010, with the probability of term <i>kitchen</i> increasing by 60% over those two years.  A second jump occurs from Q1 2014 to Q4 to 2016, with <i>kitchen</i> increasing in probability by an additional 30%.  Luxury finishes accounted for 13% of each listing on average in the Q1 of 2008.  By Q3 2008, only 9% of each listing was characterized by luxury finishes.  This rapid 30% decrease in the prevalence of luxury finishes coincides with the subprime mortgage crisis of 2007 - 2009.</p>
+  <p>Luxury finishes are captured in topic 5 with keywords like <i>master, bath, suite, kitchen, granite, counter, stainless, appliances, tub, shower, gas, range, walk, closet, and custom.</i>  The focus on luxury kitchens significantly increases from 2008-2016 with two separate jumps.  The first jump occurs from Q1 2008 to Q1 2010, with the probability of term <i>kitchen</i> increasing by 60% over those two years.  A second jump occurs from Q1 2014 to Q4 to 2016, with <i>kitchen</i> increasing in probability by an additional 30%.</p> 
+  
+<p>Luxury finishes accounted for 13% of each listing on average in Q1 of 2008.  By Q3 2008, only 9% of each listing was characterized by luxury finishes.  This rapid 30% decrease in the prevalence of luxury finishes coincides with the subprime mortgage crisis of 2007 - 2009.</p>
 </section>
 <!-- jsHeader -->
 <script type="text/javascript">
@@ -182454,7 +182461,9 @@ callbacks.shift()();
 <p></p>
 <section>
   <h2>Topic 6: Charm</h2>
-  <p>The emphasis of topic 6 is on features of a home that are often identified as charming.  Keywords include <i>charm, craftsman, bungalow, updated, porch, tub, nook, original, ballard, queen, anne, and vintage</i>.  <i>Charm</i> and <i>craftsman</i> account for more than 16% of the probabilithe in this topic.  The popular neighborhood Ballard increases in probability 0.017 in Q1 2008 to .0.026 in Q4 2016, a 50% increase over 9 years.  On average, 5% of each listing is characterized by what we are calling the charming features of a home.</p>
+  <p>The emphasis of topic 6 is on features of a home that are often identified as charming.  Keywords include <i>charm, craftsman, bungalow, updated, porch, tub, nook, original, ballard, queen, anne, and vintage</i>.  <i>Charm</i> and <i>craftsman</i> account for more than 16% of the probabilithe in this topic.  The popular neighborhood Ballard increases in probability 0.017 in Q1 2008 to .0.026 in Q4 2016, a 50% increase over 9 years.</p>  
+  
+<p>On average, 5% of each listing is characterized by what we are calling the charming features of a home.</p>
 </section>
 
 <!-- jsHeader -->
@@ -218553,7 +218562,9 @@ callbacks.shift()();
 <p></p>
 <section>
   <h2>Topic 7: Scenery and views</h2>
-  <p>The view of a home is clearly the theme of topic 7, with 20% of the topic allocated to the single keyword <i>view</i>.  Other keywords include <i>deck, lake, washington, puget, sound, mountains, olympic, cascade, sunsets, mt, rainier, city, and beach.</i>  The term Puget, referring body of water Puget Sound, increases in probability by 78% over the 2008 - 2016 time period.The proportion of each listing characterized by the view is a nearly constant 5% over that same time period.</p>
+  <p>The view of a home is clearly the theme of topic 7, with 20% of the topic allocated to the single keyword <i>view</i>.  Other keywords include <i>deck, lake, washington, puget, sound, mountains, olympic, cascade, sunsets, mt, rainier, city, and beach.</i>  The term Puget, referring body of water Puget Sound, increases in probability by 78% over the 2008 - 2016 time period.</p>
+  
+<p>The proportion of each listing characterized by the view is a nearly constant 5% over that same time period.</p>
 </section>
 <!-- jsHeader -->
 <script type="text/javascript">
@@ -254652,6 +254663,8 @@ callbacks.shift()();
 <section>
   <h2>Topic 8: Classic homes</h2>
   <p>We are calling topic 8 the classic homes topic.  With keywords <i>french, doors, details, windows, glass, tiled, tudor, crown, molding, ceilings, backyard, original, built, oak, and leaded</i>.  Though more difficult to label than some other topics, these keywords evoke images of homes from a different era.</p>
+  
+<p>The prevalence of topic 8 initially climbs and reaches its peak prevalence of 8.1% in Q4 of 2010.  It subsequently falls by half over the next 6 years and finishes Q4 2008 at 3.9% of each listing (on average).</p>
 </section>
 
 <!-- jsHeader -->
@@ -290751,7 +290764,9 @@ callbacks.shift()();
 <p></p>
 <section>
   <h2>Topic 9: University of Washington</h2>
-  <p>The evolution of topic 9 is the most dramatic of all the topics.  In 2008, the dominant keyword is <i>newer</i>, but beginning in 2010, a new set of keywords emerges and <i>newer</i> significantly drops in prominence.  By the end of 2016, the topic is characterized by keywords <i>UW, university, village, ravenna, trees, plantings, burke, gilman, trail, childen, hospital</i>.  This topic clearly identifies the University of Washington (UW) area of Seattle.  Shopping plaza University Village, the walking and biking Burke Gilman Trail, and residential neighborhood Ravenna give topic 9 a clear geographic theme.  The University of Washington Hospital and Seattle Children's Hospital are nearby as well.  On average, 1% of each listing is allocated to keywords affiliated with topic 9.</p>
+  <p>The evolution of topic 9 is the most dramatic of all the topics.  In 2008, the dominant keyword is <i>newer</i>, but beginning in 2010, a new set of keywords emerges and <i>newer</i> significantly drops in prominence.  By the end of 2016, the topic is characterized by keywords <i>UW, university, village, ravenna, trees, plantings, burke, gilman, trail, childen, hospital</i>.  This topic clearly identifies the University of Washington (UW) area of Seattle.  Shopping plaza University Village, the walking and biking Burke Gilman Trail, and residential neighborhood Ravenna give topic 9 a clear geographic theme.  The University of Washington Hospital and Seattle Children's Hospital are nearby as well.</p>  
+  
+<p>On average, 1% of each listing is allocated to keywords affiliated with topic 9.</p>
 </section>
 
 <!-- jsHeader -->
