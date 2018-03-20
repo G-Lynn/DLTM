@@ -5,7 +5,7 @@ title: index
 
 <section>
   <h2>Summary</h2>
-  <p><i>Real estate listing descriptions offer insight into market inventory and perceived buyer preferences.  Overall themes in the listings and the evolution of themes through time are an important summary of local market conditions. Real estate markets exhibit complicated dynamic behavior, and learning time-varying themes from listings is challenging for two reasons: first, the listings are textual descriptions of a home; and second, the descriptions reflect the local market at a single point in time.  In this brief, we describe a new method of learning from text that allows us to overcome both of these challenges.   In the listings data, we learn themes related to location, outdoor spaces, renovations, views, and more.  For each theme, we learn a unique time-varying pattern.  Below, we describe the <b>Dynamic Linear Topic Model</b> for listings data and present interactive visualizations of the learned topics and their dynamic behavior.  </i></p>
+  <p><i>Real estate listing descriptions offer insight into market inventory and perceived buyer preferences.  Overall themes in the listings and the evolution of themes through time are an important summary of local market conditions. Real estate markets exhibit complicated dynamic behavior, and learning time-varying themes from listings is challenging for two reasons: first, the listings are textual descriptions of a home; and second, the descriptions reflect the local market at a single point in time.  In this brief, we describe the <b>Dynamic Linear Topic Model</b>, a new method of learning from text that allows us to overcome both of these challenges.   In the listings data, we learn themes related to location, outdoor spaces, renovations, views, and more.  For each theme, we learn a unique time-varying pattern.  Interactive visualizations of the learned topics illustrate their dynamic behavior.  </i></p>
 </section>
 
 <section>
@@ -19,9 +19,9 @@ title: index
 
 <section>
   <h2>Real estate listings exhibit complicated time-varying patterns</h2>
-  <p> The goal of this analysis is threefold: first, we want to <b>learn the important themes in a particular market from a set of real estate listings</b> and understand how these themes change over time</b>learn from a set of real estate listings; second, we want to understand the <b>relative importance</b> of each theme in the overall market; and third, we want to understand <b>how much each theme contributes to individual listing descriptions.</b></p>
+  <p> The goal of this analysis is threefold: first, we want to <b>learn the important themes in a particular market from a set of real estate listings</b> and understand how these themes change over time</b>; second, we want to understand the <b>relative importance</b> of each theme in the overall market; and third, we want to understand <b>how much each theme contributes to individual listing descriptions.</b></p>
   
-  <p>One way of learning themes from text is with topic models.  Topic models represent themes in text with probabilities; a topic is defined as a probability distribution over all the possible words that could be used to create a document.  A real estate topic about kitchens may place high probability on words like <i>appliances, stainless steel, and granite</i> but very low probability placed on words like <i>garden, patio, and backyard</i>.  On the other hand, a topic focused on outdoor spaces may place high probability on <i>garden, patio, backyard</i>, but give very little weight to kitchen-related terms.  Our first goal is to learn these topics from the listing descriptions.</p>
+  <p>One way of learning themes from text is with topic models.  Topic models represent themes in text with probabilities; a topic is defined as a probability distribution over all the possible words that could be used to create a document.  A real estate topic about kitchens may place high probability on words like <i>appliances, stainless steel, and granite</i> but very low probability on words like <i>garden, patio, and backyard</i>.  On the other hand, a topic focused on outdoor spaces may place high probability on <i>garden, patio, backyard</i>, but give very little weight to kitchen-related terms.  Our first goal is to learn these topics from the listing descriptions.</p>
   
   <p>One particularly important element of real estate markets is that they are always changing.  Evolution in market conditions is reflected in prices, the amount of time needed to sell a home, and even in the listing description.  Sellers and agents describe a home to make it most appealing in a dynamic marketplace.  Emphasizing a home's garden when selling in the summer or it's fireplace when selling in winter is a natural way of appealing to current buyer preferences. While some market themes may recur seasonally, others may significantly increase (decrease) in importance from one year to the next, like when neighborhoods become more desirable or fall out of favor.  Such market trends can persist for many years.  Our second goal is to learn the complicated dynamic patterns that topics exhibit.</p>
   
@@ -45,7 +45,7 @@ title: index
 
 <p>In this example, we are writing new listings with a randomized procedure.  When analyzing the actual data,  we <i>reverse the process</i>.  <b>The listings are observed, but we do not observe the bags of words or the coin used to choose the bags.  We must learn them.</b>  Our first goal is to use the listings data to estimate the percentage of ping pong balls in the location bag associated with each word.  We estimate the percentages in each bag of words at each time point. This corresponds to learning the topics and how the topics change over time.  Our second goal is to learn the probability of flipping a heads (i.e. selecting the location topic). We want to learn the probability of each topic at each time point.  In models with more than two topics, the process is similar to flipping a coin with many sides. This corresponds to learning the importance of each topic in the corpus as a whole and how that importance changes over time.</p>
 
-<p>The innovation of the Dynamic Linear Topic Model is the ability to model complicated patterns in the probability of selecting each topic.  Imagine that we want to use the same coin to select topics in March 2019 as we do in March 2018.  It is possible to model this repeated use of the same coing as <b>seasonality</b> in the topic probabilities.  It is also possible to model probabiliies that rapidly increase or decrease from one month to the next.</p>
+<p>The innovation of the Dynamic Linear Topic Model is the ability to model complicated patterns in the probability of selecting each topic.  Imagine that we want to use the same coin to select topics in March 2019 as we do in March 2018.  It is possible to model this repeated use of the same coin as <b>seasonality</b> in the topic probabilities.  It is also possible to model probabilities that rapidly increase or decrease from one month to the next with <b>polynomial trends</b>.</p>
 
 <section>
   <h2>Topics in the listings data</h2>
@@ -38037,21 +38037,6 @@ callbacks.shift()();
 
 // jsFooter
 </script>
-
-
-<!-- jsChart -->  
-<script type="text/javascript" src="https://www.google.com/jsapi?callback=displayChartMotionChartID182b34b341700"></script>
-
-
-<!-- divChart -->
-  
-<div id="MotionChartID182b34b341700" 
-  style="width: 600; height: 500;">
-</div>
-
-<div><span>Data: Topic &#8226; Chart ID: <a href="Chart_MotionChartID182b34b341700.html">MotionChartID182b34b341700</a> &#8226; <a href="https://github.com/mages/googleVis">googleVis-0.6.2</a></span><br />
-<!-- MotionChart generated in R 3.3.1 by googleVis 0.6.2 package -->
-<!-- Thu Mar 15 13:29:18 2018 -->
 
 <p></p>
 <section>
