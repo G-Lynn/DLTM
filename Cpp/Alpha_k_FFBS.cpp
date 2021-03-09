@@ -52,7 +52,7 @@ arma::mat Alpha_k_FFBS(const std::string& fname, int mm, int B, int thin, int t_
     arma::mat Q_inv_t = - a2_inv * F_t * arma::inv(R_t_inv + a2_inv * F_t.t() * F_t ) * a2_inv * F_t.t();
     Q_inv_t.diag() = Q_inv_t.diag() + a2_inv;
     
-    arma::mat A_t = R_t * F_t.t() * Q_inv_t;
+    arma::mat A_t = R_t * F_t * Q_inv_t;
     //Rcpp::Rcout << "A_t: " << A_t << std::endl;
     //Rcpp::Rcout << "R_t: " << R_t << std::endl;
     arma::mat C_t = R_t - A_t * Q_t * A_t.t();
